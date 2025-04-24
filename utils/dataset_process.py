@@ -109,35 +109,47 @@ def delete_monochrome_image(dataset_name, mode=None):
 
 def compute_mean_std(images_dir):
     """Compute the mean and std of dataset images.
-
+        计算给定目录下所有图像的 均值（mean） 和 标准差（std） 的函数，通常用于数据预处理，尤其是在训练神经网络时进行图像归一化。
     Parameter:
         dataset_name(str): name of the specified dataset.
 
     Return:
+        计算的均值和标准差列表，分别对应每个通道（R、G、B）。
         means(list): means in three channel(RGB) of images in :obj:`images_dir`
         stds(list): stds in three channel(RGB) of images in :obj:`images_dir`
     """
-
+    # 将 images_dir 转换为 Path 对象，方便对目录和文件的操作
     images_dir = Path(images_dir)
-    # calculate means and std
+
+    # 初始化均值和标准差：
     means = [0, 0, 0]
     stds = [0, 0, 0]
-
+    # 使用 listdir() 获取目录中的所有文件名，并通过 splitext(file)[0] 获取去掉扩展名的文件名。
     ids = [splitext(file)[0] for file in listdir(images_dir) if not file.startswith('.')]
+    # num_imgs 计算图像的数量。
     num_imgs = len(ids)
 
+    # 果目录为空（没有图像），抛出异常。
     if not ids:
         raise RuntimeError(f'No input file found in {images_dir}, make sure you put your images there')
+    # 环计算每张图像的均值和标准差：
     for name in tqdm(ids):
         img_file = list(images_dir.glob(str(name) + '.*'))
         assert len(img_file) == 1, f'Either no image or multiple images found for the ID {name}: {img_file}'
+        # 使用 PIL.Image.open() 读取图像并转为 NumPy 数组。
+        # img举个示例：[[[255, 0, 0], [0, 255, 0]],
+        #         [[0, 0, 255], [255, 255, 255]]]
         img = Image.open(img_file[0])
+        # img_array 是一个 NumPy 数组，表示一张图像，形状为 (height, width, channels)，即三维数组。对于 RGB 图像，channels 的大小是 3
         img_array = np.array(img)
+        # 归一化图像：将图像数据标准化为 [0, 1] 范围
         img_array = img_array.astype(np.float32) / 255.
         for i in range(3):
+            # img_array[:, :, i] 使用了 切片（slicing）来提取图像中第 i 个通道的数据（RGB 中分别是红色、绿色、蓝色通道）
+            # : 表示取所有高度/宽度
             means[i] += img_array[:, :, i].mean()
             stds[i] += img_array[:, :, i].std()
-
+    # 除以总数就得到所有图片的均值、标准差
     means = np.asarray(means) / num_imgs
     stds = np.asarray(stds) / num_imgs
 

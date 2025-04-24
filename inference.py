@@ -9,7 +9,9 @@ from models.Models import DPCD
 from utils.dataset_process import compute_mean_std
 from tqdm import tqdm
 
-
+'''
+    
+'''
 def train_net(dataset_name, load_checkpoint=True):
     # 1. Create dataset
 
@@ -86,6 +88,7 @@ def train_net(dataset_name, load_checkpoint=True):
 if __name__ == '__main__':
 
     try:
+        # todo:需要修改成自己的数据集路径
         train_net(dataset_name='data_njds_crop_8', load_checkpoint=False)
     except KeyboardInterrupt:
         logging.info('Error')

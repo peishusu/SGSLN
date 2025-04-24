@@ -2,11 +2,11 @@ class Path_Hyperparameter:
     random_seed = 42
 
     # dataset hyper-parameter
-    dataset_name = 'your_dataset_name'
+    dataset_name = 'CLCD'
 
     # training hyper-parameter
-    epochs: int = 500  # Number of epochs
-    batch_size: int = 16  # Batch size
+    epochs: int = 250  # Number of epochs
+    batch_size: int = 1  # Batch size
     inference_ratio = 2  # batch_size in val and test equal to batch_size*inference_ratio
     learning_rate: float = 2e-4  # Learning rate
     factor = 0.1  # learning rate decreasing factor
@@ -14,7 +14,8 @@ class Path_Hyperparameter:
     warm_up_step = 500  # warm up step
     weight_decay: float = 1e-3  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not
-    load: str = False  # Load model and/or optimizer from a .pth file for testing or continuing training
+    load: str = False
+    # load: str = './S2Looking_datasets_best_f1score_model/best_f1score_epoch258_Sun Apr 13 02:34:04 2025.pth'  # Load model and/or optimizer from a .pth file for testing or continuing training
     max_norm: float = 20  # gradient clip max norm
 
     # evaluate hyper-parameter
@@ -32,7 +33,7 @@ class Path_Hyperparameter:
 
     # model hyper-parameter
     dropout_p: float = 0.1  # probability of dropout
-    patch_size: int = 256  # size of input image
+    patch_size: int = 512  # size of input image
 
     y = 2  # ECA-net parameter
     b = 1  # ECA-net parameter
@@ -40,6 +41,7 @@ class Path_Hyperparameter:
     # inference parameter
     log_path = './log_feature/'
 
+    # 最终的 hyperparameter_dict 字典会包含类中所有非下划线开头的类属性（即所有公开配置参数）
     def state_dict(self):
         return {k: getattr(self, k) for k, _ in Path_Hyperparameter.__dict__.items() \
                 if not k.startswith('_')}
