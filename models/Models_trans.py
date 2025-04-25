@@ -14,7 +14,7 @@ class DPCD(nn.Module):
         channel_list = [32, 64, 128, 256, 512]
         # 编码器部分
         # 这个encode1作用：
-        self.en_block1 = nn.Sequential(Conv_BN_ReLU(in_channel=3, out_channel=channel_list[0], kernel=3, stride=2),
+        self.en_block1 = nn.Sequential(Conv_BN_ReLU(in_channel=3, out_channel=channel_list[0], kernel=3, stride=1),
                                        CGSU(in_channel=channel_list[0]),
                                        CGSU(in_channel=channel_list[0]),
                                        )
@@ -33,12 +33,14 @@ class DPCD(nn.Module):
         # c-block4
         self.de_block3 = Decoder_Block(in_channel=channel_list[2], out_channel=channel_list[1])
 
+
+
         # dpfa(可以认为就是论文中tfam的实现)
         # 经过这个dpfa的操作之后，输入和输出通道数是相同的
-        self.dpfa1 = DPFA(in_channel=channel_list[4])
-        self.dpfa2 = DPFA(in_channel=channel_list[3])
-        self.dpfa3 = DPFA(in_channel=channel_list[2])
-        self.dpfa4 = DPFA(in_channel=channel_list[1])
+        self.dpfa1 = DPFA(in_channel=channel_list[0])
+        self.dpfa2 = DPFA(in_channel=channel_list[0])
+        self.dpfa3 = DPFA(in_channel=channel_list[0])
+        self.dpfa4 = DPFA(in_channel=channel_list[0])
 
         # change path
         # the change block is the same as decoder block
@@ -79,6 +81,7 @@ class DPCD(nn.Module):
         self.CA_s16 = context_aggregator(in_chan=32, size=ph.patch_size//16)
         self.CA_s8 = context_aggregator(in_chan=32, size=ph.patch_size//8)
         self.CA_s4 = context_aggregator(in_chan=32, size=ph.patch_size//4)
+        self.CA_s2 = context_aggregator(in_chan=32,size=ph.patch_size//2)
 
         self.conv_s8 = nn.Conv2d(32 * 2, 32, kernel_size=3, padding=1)
         self.conv_s4 = nn.Conv2d(32 * 2, 32, kernel_size=3, padding=1)
@@ -124,9 +127,9 @@ class DPCD(nn.Module):
                 t1(B,3,H,W)
                 t2(B,3,H,W)
         '''
-        # t1_1的格式 (B,32,H/2,/2)
+        # t1_1的格式 (B,32,H,W)
         t1_1 = self.en_block1(t1)
-        # t2_1的格式 (B,32,H/2,W/2)
+        # t2_1的格式 (B,32,H,W)
         t2_1 = self.en_block1(t2)
 
         if log:
@@ -149,31 +152,33 @@ class DPCD(nn.Module):
             t1_5 = self.en_block5(t1_4, log=log, module_name='t1_4_en_block5', img_name=img_name)
             t2_5 = self.en_block5(t2_4, log=log, module_name='t2_4_en_block5', img_name=img_name)
         else:
-            # T1_2和t2_2的格式均为 (B,64,H/4,W/4)  used == out1_s4
+            # T1_2和t2_2的格式均为 (B,64,H/2,W/2)  used == out1_s4
             t1_2 = self.en_block2(t1_1)
             t2_2 = self.en_block2(t2_1)
 
-            # T1_3和t2_3的格式均为 (B,128,H/8,W/8)  used == out1_s8
+            # T1_3和t2_3的格式均为 (B,128,H/4,W/4)  used == out1_s8
             t1_3 = self.en_block3(t1_2)
             t2_3 = self.en_block3(t2_2)
 
-            # t1_4和t2_4的格式均为(B,256,H/16,W/16)
+            # 进过CE信息之后，t1_4和 t2_4的格式任然为(B,128,H/4,W/4)
+            t1_3, t2_3 = self.channel_exchange4(t1_3, t2_3)
+
+            # t1_4和t2_4的格式均为(B,256,H/8,W/8)
             t1_4 = self.en_block4(t1_3)
             t2_4 = self.en_block4(t2_3)
 
-            # 进过CE信息之后，t1_4和 t2_4的格式任然为(B,256,H/16,W/16)
-            t1_4, t2_4 = self.channel_exchange4(t1_4, t2_4)
-
-            # T1_5和t2_5的格式为(B,512,H/32,W/32)
+            # T1_5和t2_5的格式为(B,512,H/16,W/16)
             t1_5 = self.en_block5(t1_4)
             t2_5 = self.en_block5(t2_4)
             # T1_5和t2_5的格式为(B,512,H/16,W/16)   used == out1_s16
-            t1_5 = self.upsample_sizex2(t1_5)
-            t2_5 = self.upsample_sizex2(t2_5)
+            # t1_5 = self.upsample_sizex2(t1_5)
+            # t2_5 = self.upsample_sizex2(t2_5)
 
-        # 针对t1_2 t1_3 t1_5 进行通道数的转换,都转化成32通道数，但是图片尺寸不变化 预期是（B,32,h/16/w/16）
+        # 针对t1_2 t1_3 t1_5 进行通道数的转换,都转化成32通道数，但是图片尺寸不变化 预期是（B,32,h/32,/w/32）
         out1_s16 = self.pos_s16(t1_5)
         out2_s16 = self.pos_s16(t2_5)
+
+
         # out1_s8 格式为(B,32,H/8,W/8)
         out1_s8 = self.pos_s8(t1_3)
         out2_s8 = self.pos_s8(t2_3)
@@ -182,15 +187,16 @@ class DPCD(nn.Module):
         out2_s4 = self.pos_s4(t2_2)
 
         # --------------------context aggregate (scale 16, scale 8, scale 4)--------------------------
+        # x1_s16[B,32,H/16,W/16]  x2_s16[B,32,H/16,W/16]
         x1_s16 = self.CA_s16(out1_s16)
         x2_s16 = self.CA_s16(out2_s16)
         # 输入 x1_s16[B,32,H/16,W/16]  x2_s16[B,32,H/16,W/16]   输出：x16[B,64,H/16,W/16]
-        x16 = torch.cat([x1_s16, x2_s16], dim=1)
+        # x16 = torch.cat([x1_s16, x2_s16], dim=1)
         # 指定了输出图像的目标大小，它等于原始图像的高度和宽度 (H, W)。
         # 输入[B,64,H/16,W/16]  输出格式：(B, 64, H, W)
-        x16 = F.interpolate(x16, size=t1.shape[2:], mode='bicubic', align_corners=True)
+        # x16 = F.interpolate(x16, size=t1.shape[2:], mode='bicubic', align_corners=True)
         # x16的格式变为 [B,2,H,W]
-        x16 = self.classifier1(x16)
+        # x16 = self.classifier1(x16)
 
         # out1_s8格式为 [B,32,H/8,W/8]
         out1_s8 = self.conv_s8(torch.cat([self.upsamplex2(x1_s16), out1_s8], dim=1))  # 图片1
@@ -199,21 +205,28 @@ class DPCD(nn.Module):
         x1_s8 = self.CA_s8(out1_s8)
         x2_s8 = self.CA_s8(out2_s8)
         # x8的最终输出格式[B,2,H,W]
-        x8 = torch.cat([x1_s8, x2_s8], dim=1)
-        x8 = F.interpolate(x8, size=t1.shape[2:], mode='bicubic', align_corners=True)
-        x8 = self.classifier2(x8)
+        # x8 = torch.cat([x1_s8, x2_s8], dim=1)
+        # x8 = F.interpolate(x8, size=t1.shape[2:], mode='bicubic', align_corners=True)
+        # x8 = self.classifier2(x8)
 
-        # out1_s4格式为[B,32,H/4,H/W]
+        # out1_s4格式为[B,32,H/4,H/4]
         out1_s4 = self.conv_s4(torch.cat([self.upsamplex2(x1_s8), out1_s4], dim=1))
         out2_s4 = self.conv_s4(torch.cat([self.upsamplex2(x2_s8), out2_s4], dim=1))
-        x1 = self.CA_s4(out1_s4)
-        x2 = self.CA_s4(out2_s4)
+        # x1_s4的格式为：[B,32,H/4,W/4]
+        x1_s4 = self.CA_s4(out1_s4)
+        x2_s4 = self.CA_s4(out2_s4)
         # x的最终输出格式:[B,2,H,W]
-        x = torch.cat([x1, x2], dim=1)
-        x = F.interpolate(x, size=t1.shape[2:], mode='bicubic', align_corners=True)
-        x = self.classifier3(x)
+        # x = torch.cat([x1, x2], dim=1)
+        # x = F.interpolate(x, size=t1.shape[2:], mode='bicubic', align_corners=True)
+        # x = self.classifier3(x)
 
-
+        # 进行tfam操作
+        # x1_s16格式为[B,32,H/16,W/16] 预期 change_s16的输出是(b,32,h/16,w/16)
+        change_s16 = self.dpfa1(x1_s16,x2_s16)
+        # 输入：x1_s8格式为[B,32,H/8,W/8] -> 所以 self.dpfa2的格式就是(B,32,H/8,W/8) change_s16的格式为(B,32,h/16,w/16) -> 最终change_s8的格式就是(B,32,H/8,W/8)
+        change_s8 = self.change_block4(change_s16,self.dpfa2(x1_s8,x2_s8))
+        # 输入：x1_s4格式为[B,32,H/4,W/4] -> 所以 self.dpfa2的格式就是(B,32,H/4,W/4) change_s16的格式为(B,32,h/16,w/16) -> 最终change_s8的格式就是(B,32,H/8,W/8)
+        change_s4 = self.change_block3(change_s8,self.dpfa3(x1_s4,x2_s4))
 
 
 

@@ -5,32 +5,7 @@ from models.dpcd_parts import (Conv_BN_ReLU, CGSU, Encoder_Block, DPFA, Decoder_
 
 
 class DPCD(nn.Module):
-    """ Change detection model
 
-    Input :obj:`t1_img` and :obj:`t2_img`, extract encoder feature by :obj:`en_block1-4`,
-    then exchange channel feature of :obj:`t1_feature` and :obj:`t2_feature`, and extract
-    encoder feature by :obj:`en_block5`.
-    输入：t1和t2的图片，通过en_block1-4提取编码器特征，随后交换t1_feature和t2_feature的通道特征，然后通过en_block5进一步提取编码器特征
-
-    Upsample to get decoder feature by :obj:`de_block1-3`, get :obj:`seg_feature1` and :obj:`seg_feature2`
-    by :obj:`seg_out1` and :obj:`seg_out2`.
-    上采样：通过 de_bloack1-3获得编码器特征，
-
-    Fuse t1 and t2 corresponding feature to get change feature by :obj:`dpfa` and :obj:`change_blcok`.
-    通过dpfa和 change_block模块融合t1和t2的对应特征，生成变化特征
-
-    Notice that output of module and model could be log in this model.
-
-    Attribute:
-        en_block(class): encoder feature extractor.
-        channel_exchange(class): exchange t1 and t2 feature.
-        de_block(class): decoder feature upsampler and extractor.
-        dpfa(class): fuse t1 and t2 feature to get change feature by using both spatial and channel attention.
-        change_block(class): change feature upsampler and extracor.
-        seg_out(class): get decoder feature seg out result.
-        upsample_x2(class): upsample change feature by 2.
-        conv_out_change(class): conv out change feature out result.
-    """
 
     def __init__(self):
         super().__init__()

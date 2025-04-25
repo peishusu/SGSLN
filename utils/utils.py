@@ -118,10 +118,10 @@ def train_val(
             # pred_log[pred_log < 0.5] = 0
             # pred_log = pred_log.float()
 
-        preds = preds.float()
+        preds = preds.float()  #格式为(1,2,h,w)
         # label标签 (B,2,H,W)
-        # labels = labels.int().unsqueeze(1) 这一块还是存在问题？？？？？？？？？
-        labels = labels.long()
+        # labels = labels.int().unsqueeze(1)
+        labels = labels.long() # 格式为(1,2,h,w)
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
 
         # log loss and metric
@@ -159,6 +159,7 @@ def train_val(
     log_wandb.log({f'epoch_{mode}_loss': epoch_loss,
                    'epoch': epoch})  # log epoch loss
 
+    # 在wandb-summary.json文件中打印出关于原始图片t1\t2\label以及预测标签pred的相关信息
     log_wandb.log({
         f'{mode} t1_images': wandb.Image(t1_img_log),
         f'{mode} t2_images': wandb.Image(t2_img_log),
