@@ -230,12 +230,7 @@ class DPCD(nn.Module):
 
 
 
-        # 一般传递的关于log就是false,所以这个log_feature方法一般不会使用
-        # if log:
-        #     log_feature(log_list=[change_out, seg_out1, seg_out2], module_name='model',
-        #                 feature_name_list=['change_out', 'seg_out1', 'seg_out2'],
-        #                 img_name=img_name, module_output=False)
-
+        # 有待加入tfam进行缝合
         return x, x8, x16
 
         # return change_out, seg_out1, seg_out2

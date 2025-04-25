@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="缝代码">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/Models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Models_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/Models_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -248,6 +245,7 @@
       <workItem from="1745505639068" duration="1212000" />
       <workItem from="1745506890964" duration="440000" />
       <workItem from="1745543495004" duration="11614000" />
+      <workItem from="1745569515127" duration="304000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -257,7 +255,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745506794078</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="缝代码">
+      <option name="closed" value="true" />
+      <created>1745569531137</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745569531137</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
