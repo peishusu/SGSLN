@@ -78,7 +78,7 @@ class DPCD(nn.Module):
         self.pos_s2 = PA(64,32)
 
 
-        # msca多尺度上下文聚合器的定义
+        # msca多尺度上下文聚合器的定义，这里面的size需要随时的根据测试的picture去进行更新
         self.CA_s16 = context_aggregator(in_chan=32, size=ph.patch_size//16)
         self.CA_s8 = context_aggregator(in_chan=32, size=ph.patch_size//8)
         self.CA_s4 = context_aggregator(in_chan=32, size=ph.patch_size//4)
