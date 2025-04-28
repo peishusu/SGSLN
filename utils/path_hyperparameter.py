@@ -19,7 +19,7 @@ class Path_Hyperparameter:
     max_norm: float = 20  # gradient clip max norm
 
     # evaluate hyper-parameter
-    evaluate_epoch: int = 250  # start evaluate after training for evaluate epochs
+    evaluate_epoch: int = 200  # start evaluate after training for evaluate epochs
     stage_epoch = [0, 0, 0, 0, 0]  # adjust learning rate after every stage epoch
     save_checkpoint: bool = True  # if save checkpoint of model or not
     save_interval: int = 10  # save checkpoint every interval epoch
