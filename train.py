@@ -233,6 +233,6 @@ def train_net(dataset_name):
 
 
 if __name__ == '__main__':
-
+    # 程序执行入口
     auto_experiment()
 
