@@ -5,7 +5,8 @@ import logging
 from utils.path_hyperparameter import ph
 import torch
 from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score
-from models.Models import DPCD
+# from models.Models import DPCD
+from models.Models_trans import DPCD
 from utils.dataset_process import compute_mean_std
 from tqdm import tqdm
 
@@ -68,7 +69,7 @@ def train_net(dataset_name, load_checkpoint=True):
             labels = labels.float().to(device)
 
             cd_preds = net(batch_img1, batch_img2, log=True, img_name=name)
-            cd_preds = torch.sigmoid(cd_preds[0])
+            cd_preds = torch.sigmoid(cd_preds)
 
             # Calculate and log other batch metrics
             cd_preds = cd_preds.float()
@@ -89,7 +90,7 @@ if __name__ == '__main__':
 
     try:
         # todo:需要修改成自己的数据集路径
-        train_net(dataset_name='data_njds_crop_8', load_checkpoint=False)
+        train_net(dataset_name='CLCD', load_checkpoint=False)
     except KeyboardInterrupt:
         logging.info('Error')
         sys.exit(0)
