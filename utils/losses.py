@@ -48,15 +48,13 @@ def FCCDN_loss_without_seg(scores, labels):
     '''
         定义了一个计算损失函数的过程，专门用于二进制变化检测任务，具体是 FCCDN_loss_without_seg 函数。它接受模型预测的 scores 和真实标签 labels，并计算每个时间步的损失
     '''
-    # scores = change_pred
-    # labels = binary_cd_labels
-    # 目的是确保 scores 和 labels 的形状一致
-    scores = [score.squeeze(1) if len(score.shape) > 3 else score for score in scores]
-    labels = [label.squeeze(1) if len(label.shape) > 3 else label for label in labels]
-    # if len(scores.shape) > 3:
-    #     scores = scores.squeeze(1)
-    # if len(labels.shape) > 3:
-    #     labels = labels.squeeze(1)
+
+    # scores = [score.squeeze(1) if len(score.shape) > 3 else score for score in scores]
+    # labels = [label.squeeze(1) if len(label.shape) > 3 else label for label in labels]
+    if len(scores.shape) > 3:
+        scores = scores.squeeze(1)
+    if len(labels.shape) > 3:
+        labels = labels.squeeze(1)
     """ for binary change detection task"""
     # 定义了一个损失函数，dice_focal_loss 是一种结合了 Dice 系数和焦点损失的损失函数。Dice 损失用于衡量预测与真实标签之间的相似度，Focal 损失主要解决类别不平衡的问题，特别适用于变化检测等任务。
     criterion_change = dice_focal_loss()

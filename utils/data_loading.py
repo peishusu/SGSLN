@@ -30,7 +30,7 @@ class BasicDataset(Dataset):
         self.t2_ids = [splitext(file)[0] for file in listdir(t2_images_dir) if not file.startswith('.')]
         self.t1_ids.sort()
         self.t2_ids.sort()
-        self.lab_transform = get_transform()
+
 
         # 判断文件内容的合理性
         # 判断传来的t1\t2所在文件夹是否为空
@@ -188,27 +188,3 @@ class BasicDataset(Dataset):
         return t1_tensor, t2_tensor, label_tensor, name
 
 
-def get_transform(convert=True, normalize=False):
-    transform_list = []
-    if convert:
-        transform_list += [transforms.ToTensor()]
-    if normalize:
-        transform_list += [transforms.Normalize((0.5, 0.5, 0.5),
-                                                (0.5, 0.5, 0.5))]
-    return transforms.Compose(transform_list)
-
-def make_one_hot(input, num_classes):
-    """Convert class index tensor to one hot encoding tensor.
-
-    Args:
-         input: A tensor of shape [N, 1, *]
-         num_classes: An int of number of class
-    Returns:
-        A tensor of shape [N, num_classes, *]
-    """
-    shape = np.array(input.shape)  # 获取输入形状（如 [N, 1, H, W]）
-    shape[1] = num_classes   # 将第 1 维（原 1）改为 num_classes
-    shape = tuple(shape) # 转换为元组（如 (N, 2, H, W)）
-    result = torch.zeros(shape) # 创建全 0 的张量，形状 (N, num_classes, H, W)
-    result = result.scatter_(1, input.cpu(), 1)  # 如果 input[0,0,0,0] = 1，则 result[0,1,0,0] = 1（在类别 1 的位置填 1）。
-    return result
