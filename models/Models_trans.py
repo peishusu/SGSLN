@@ -36,7 +36,7 @@ class DPCD(nn.Module):
 
 
         # dpfa(可以认为就是论文中tfam的实现)
-        # 经过这个dpfa的操作之后，输入和输出通道数是相同的
+        # 经过这个dpfa的操作之后，输入和输出通道数是相同的，同时不改变图片尺寸大小
         self.dpfa1 = DPFA(in_channel=channel_list[0])
         self.dpfa2 = DPFA(in_channel=channel_list[0])
         self.dpfa3 = DPFA(in_channel=channel_list[0])
@@ -45,15 +45,15 @@ class DPCD(nn.Module):
         # change path
         # the change block is the same as decoder block
         # the change block is used to fuse former and latter change features
-        self.change_block4 = Decoder_Block(in_channel=channel_list[4], out_channel=channel_list[3])
-        self.change_block3 = Decoder_Block(in_channel=channel_list[3], out_channel=channel_list[2])
-        self.change_block2 = Decoder_Block(in_channel=channel_list[2], out_channel=channel_list[1])
+        self.change_block4 = Decoder_Block(in_channel=channel_list[0], out_channel=channel_list[0])
+        self.change_block3 = Decoder_Block(in_channel=channel_list[0], out_channel=channel_list[0])
+        self.change_block2 = Decoder_Block(in_channel=channel_list[0], out_channel=channel_list[0])
 
         self.seg_out1 = nn.Conv2d(channel_list[1], 1, kernel_size=3, stride=1, padding=1)
         self.seg_out2 = nn.Conv2d(channel_list[1], 1, kernel_size=3, stride=1, padding=1)
 
         self.upsample_x2 = nn.Sequential(
-            nn.Conv2d(channel_list[1], channel_list[0], kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(channel_list[0], channel_list[0], kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(channel_list[0]),
             nn.ReLU(inplace=True),
             nn.Conv2d(channel_list[0], 8, kernel_size=3, stride=1, padding=1),
@@ -73,8 +73,9 @@ class DPCD(nn.Module):
         )
 
         self.pos_s16 = PA(512,32)
-        self.pos_s8 = PA(128,32)
-        self.pos_s4 = PA(64,32)
+        self.pos_s8 = PA(256,32)
+        self.pos_s4 = PA(128,32)
+        self.pos_s2 = PA(64,32)
 
 
         # msca多尺度上下文聚合器的定义
@@ -83,9 +84,13 @@ class DPCD(nn.Module):
         self.CA_s4 = context_aggregator(in_chan=32, size=ph.patch_size//4)
         self.CA_s2 = context_aggregator(in_chan=32,size=ph.patch_size//2)
 
+        # 通道数从64-》32,但是图片尺寸不变化
         self.conv_s8 = nn.Conv2d(32 * 2, 32, kernel_size=3, padding=1)
         self.conv_s4 = nn.Conv2d(32 * 2, 32, kernel_size=3, padding=1)
+        self.conv_s2 = nn.Conv2d(32 * 2, 32, kernel_size=3, padding=1)
 
+
+        # 通道数不变化，但是图片尺寸变为原来的两倍
         self.upsamplex2 = nn.Upsample(scale_factor=2, mode="bicubic", align_corners=True)
 
 
@@ -160,8 +165,8 @@ class DPCD(nn.Module):
             t1_3 = self.en_block3(t1_2)
             t2_3 = self.en_block3(t2_2)
 
-            # 进过CE信息之后，t1_4和 t2_4的格式任然为(B,128,H/4,W/4)
-            t1_3, t2_3 = self.channel_exchange4(t1_3, t2_3)
+            # CE 暂时不采用，进过CE信息之后，t1_4和 t2_4的格式任然为(B,128,H/4,W/4)
+            # t1_3, t2_3 = self.channel_exchange4(t1_3, t2_3)
 
             # t1_4和t2_4的格式均为(B,256,H/8,W/8)
             t1_4 = self.en_block4(t1_3)
@@ -175,28 +180,24 @@ class DPCD(nn.Module):
             # t2_5 = self.upsample_sizex2(t2_5)
 
         # 针对t1_2 t1_3 t1_5 进行通道数的转换,都转化成32通道数，但是图片尺寸不变化 预期是（B,32,h/32,/w/32）
+        # out1_s16格式为(B,32,H/16,W/16)
         out1_s16 = self.pos_s16(t1_5)
         out2_s16 = self.pos_s16(t2_5)
-
-
         # out1_s8 格式为(B,32,H/8,W/8)
-        out1_s8 = self.pos_s8(t1_3)
-        out2_s8 = self.pos_s8(t2_3)
+        out1_s8 = self.pos_s8(t1_4)
+        out2_s8 = self.pos_s8(t2_4)
         # out1_s4 格式为(B,32,H/4,/W4)
-        out1_s4 = self.pos_s4(t1_2)
-        out2_s4 = self.pos_s4(t2_2)
+        out1_s4 = self.pos_s4(t1_3)
+        out2_s4 = self.pos_s4(t2_3)
+        # out1_s2的格式为(B,32,H/2,W/2)
+        out1_s2 = self.pos_s2(t1_2)
+        out2_s2 = self.pos_s2(t2_2)
 
-        # --------------------context aggregate (scale 16, scale 8, scale 4)--------------------------
+        # --------------------context aggregate (scale 16, scale 8, scale 4, scale 2)--------------------------
         # x1_s16[B,32,H/16,W/16]  x2_s16[B,32,H/16,W/16]
         x1_s16 = self.CA_s16(out1_s16)
         x2_s16 = self.CA_s16(out2_s16)
-        # 输入 x1_s16[B,32,H/16,W/16]  x2_s16[B,32,H/16,W/16]   输出：x16[B,64,H/16,W/16]
-        # x16 = torch.cat([x1_s16, x2_s16], dim=1)
-        # 指定了输出图像的目标大小，它等于原始图像的高度和宽度 (H, W)。
-        # 输入[B,64,H/16,W/16]  输出格式：(B, 64, H, W)
-        # x16 = F.interpolate(x16, size=t1.shape[2:], mode='bicubic', align_corners=True)
-        # x16的格式变为 [B,2,H,W]
-        # x16 = self.classifier1(x16)
+
 
         # out1_s8格式为 [B,32,H/8,W/8]
         out1_s8 = self.conv_s8(torch.cat([self.upsamplex2(x1_s16), out1_s8], dim=1))  # 图片1
@@ -204,10 +205,7 @@ class DPCD(nn.Module):
         # x1_s8格式为[B,32,H/8,W/8]
         x1_s8 = self.CA_s8(out1_s8)
         x2_s8 = self.CA_s8(out2_s8)
-        # x8的最终输出格式[B,2,H,W]
-        # x8 = torch.cat([x1_s8, x2_s8], dim=1)
-        # x8 = F.interpolate(x8, size=t1.shape[2:], mode='bicubic', align_corners=True)
-        # x8 = self.classifier2(x8)
+
 
         # out1_s4格式为[B,32,H/4,H/4]
         out1_s4 = self.conv_s4(torch.cat([self.upsamplex2(x1_s8), out1_s4], dim=1))
@@ -215,22 +213,31 @@ class DPCD(nn.Module):
         # x1_s4的格式为：[B,32,H/4,W/4]
         x1_s4 = self.CA_s4(out1_s4)
         x2_s4 = self.CA_s4(out2_s4)
-        # x的最终输出格式:[B,2,H,W]
-        # x = torch.cat([x1, x2], dim=1)
-        # x = F.interpolate(x, size=t1.shape[2:], mode='bicubic', align_corners=True)
-        # x = self.classifier3(x)
+
+        # out1_s2格式为[B,32,H/2,H/2]
+        out1_s2 = self.conv_s2(torch.cat([self.upsamplex2(x1_s4), out1_s2], dim=1))
+        out2_s2 = self.conv_s2(torch.cat([self.upsamplex2(x2_s4), out2_s2], dim=1))
+        # x1_s2的格式为：[B,32,H/2,W/2]
+        x1_s2 = self.CA_s2(out1_s2)
+        x2_s2 = self.CA_s2(out2_s2)
+
+
 
         # 进行tfam操作
         # x1_s16格式为[B,32,H/16,W/16] 预期 change_s16的输出是(b,32,h/16,w/16)
         change_s16 = self.dpfa1(x1_s16,x2_s16)
         # 输入：x1_s8格式为[B,32,H/8,W/8] -> 所以 self.dpfa2的格式就是(B,32,H/8,W/8) change_s16的格式为(B,32,h/16,w/16) -> 最终change_s8的格式就是(B,32,H/8,W/8)
         change_s8 = self.change_block4(change_s16,self.dpfa2(x1_s8,x2_s8))
-        # 输入：x1_s4格式为[B,32,H/4,W/4] -> 所以 self.dpfa2的格式就是(B,32,H/4,W/4) change_s16的格式为(B,32,h/16,w/16) -> 最终change_s8的格式就是(B,32,H/8,W/8)
+        # 输入：x1_s4格式为[B,32,H/4,W/4] -> 所以 self.dpfa2的格式就是(B,32,H/4,W/4) change_s8的格式为(B,32,h/8,w/8) -> 最终change_s4的格式就是(B,32,H/4,W/4)
         change_s4 = self.change_block3(change_s8,self.dpfa3(x1_s4,x2_s4))
+        # 输入：x1_s2格式为[B,32,H/2,W/2] -> 所以 self.dpfa4的格式就是(B,32,H/2,W/2) change_s4的格式为(B,32,h/4,w/4) -> 最终change_s2的格式就是(B,32,H/2,W/2)
+        change_s2 = self.change_block2(change_s4, self.dpfa4(x1_s2, x2_s2))
 
+        # change的格式为(B,8,H,W)
+        change = self.upsample_x2(change_s2)
+        # change_out的格式(B,1,H,W)
+        change_out = self.conv_out_change(change)
 
+        # change_out的输出格式确实为(1,1,h,w)
+        return change_out
 
-        # 有待加入tfam进行缝合
-        return x, x8, x16
-
-        # return change_out, seg_out1, seg_out2

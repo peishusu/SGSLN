@@ -63,13 +63,5 @@ def FCCDN_loss_without_seg(scores, labels):
 
     # change loss
     # 计算第一类变化检测的损失。scores[0] 和 labels[0] 分别代表预测结果和真实标签的第一个元素
-    loss_change = criterion_change(scores[0], labels[0])
-    # 计算第二类的损失，scores[1] 和 labels[1] 代表预测结果和真实标签的第二个元素。
-    loss_seg1 = criterion_change(scores[1], labels[1])
-    # 计算第三类的损失，scores[2] 和 labels[1] 仍然代表预测结果和第一个时间戳的真实标签。这里 labels[1] 被重复使用来进行与 scores[2] 的比较。
-    loss_seg2 = criterion_change(scores[2], labels[1])
-
-    for i in range(len(loss_change)):
-        loss_change[i] += 0.2 * (loss_seg1[i] + loss_seg2[i])
-
+    loss_change = criterion_change(scores, labels)
     return loss_change

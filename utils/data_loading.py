@@ -148,7 +148,10 @@ class BasicDataset(Dataset):
 
         t1_img = self.load(t1_img_file[0])
         t2_img = self.load(t2_img_file[0])
+
+
         label = self.load(label_file[0]) # label的格式就是(H,W)
+        label = self.label_preprocess(label)
 
 
 
@@ -172,22 +175,17 @@ class BasicDataset(Dataset):
             if random.choice([0, 1]):
                 t1_img, t2_img = t2_img, t1_img
 
-        # 转换label
-        # label张量形状为 （H.W）->(1, H, W)，值范围保持原始像素值（如 0, 1）
-        label = self.lab_transform(label)
-        # label.unsqueeze(0).long()：将 (1, H, W) 的标签张量扩展为 (2, H, W) 并转换为 torch.long 类型。
-        label = make_one_hot(label.unsqueeze(0).long(), 2).squeeze(0)
 
         # 使用 ToTensorV2 转换 T1 和 T2 图像以及标签为 PyTorch 张量。
         # 原始的t1_img t2_img 格式 从（H，W,C） -> (C,H,W)
-        sample = self.to_tensor(image=t1_img, image1=t2_img)
+        sample = self.to_tensor(image=t1_img, image1=t2_img,mask=label)
         # ipdb.set_trace()
-        t1_tensor, t2_tensor = sample['image'].contiguous(),\
-                                             sample['image1'].contiguous()
+        t1_tensor, t2_tensor, label_tensor = sample['image'].contiguous(),\
+                                             sample['image1'].contiguous(),sample['mask'].contiguous()
         name = t1_name
 
         # 输出格式：t1_tensor 和 t2_tensor :(3,H,W) label_tensor:(2,H,W)
-        return t1_tensor, t2_tensor, label, name
+        return t1_tensor, t2_tensor, label_tensor, name
 
 
 def get_transform(convert=True, normalize=False):

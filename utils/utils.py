@@ -86,9 +86,9 @@ def train_val(
         if mode == 'train':
             # using amp
             with torch.cuda.amp.autocast():
-                # preds实际上是一个元组((1,2,H,W)  (1,2,H,W) (1,2,H,W))
+                # preds格式为(B,1,H,W),不再是tuple元组了
                 preds = net(batch_img1, batch_img2) # 前向传播
-                loss = criterion(preds, (labels,labels))
+                loss = criterion(preds, labels) # labels的格式为(1,h,w)
             cd_loss = sum(loss)
             grad_scaler.scale(cd_loss).backward() # 反向传播
             torch.nn.utils.clip_grad_norm_(net.parameters(), 20, norm_type=2)
@@ -96,12 +96,12 @@ def train_val(
             grad_scaler.update()
         else:
             preds = net(batch_img1, batch_img2)
-            loss = criterion(preds, (labels,labels))
+            loss = criterion(preds, labels)
             cd_loss = sum(loss)
 
         epoch_loss += cd_loss
         # preds从元组 -> (1B,2,H，W)
-        preds = torch.sigmoid(preds[0])
+        preds = torch.sigmoid(preds)
 
         # log the t1_img, t2_img, pred and label
         if i == sample_batch:
@@ -119,9 +119,7 @@ def train_val(
             # pred_log = pred_log.float()
 
         preds = preds.float()  #格式为(1,2,h,w)
-        # label标签 (B,2,H,W)
-        # labels = labels.int().unsqueeze(1)
-        labels = labels.long() # 格式为(1,2,h,w)
+        labels = labels.int().unsqueeze(1) # labels从(1,512,512)->变成 (1,1,512,512)
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
 
         # log loss and metric

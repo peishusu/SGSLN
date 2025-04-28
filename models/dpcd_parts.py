@@ -288,7 +288,7 @@ class Decoder_Block(nn.Module):
     def __init__(self, in_channel, out_channel):
         super().__init__()
 
-        assert out_channel == in_channel // 2, 'the out_channel is not in_channel//2 in decoder block'
+        # assert out_channel == in_channel // 2, 'the out_channel is not in_channel//2 in decoder block'
         self.up = nn.Upsample(scale_factor=2, mode='nearest') # 仅改变输入特征图的空间分辨率（高度和宽度）变为原来的两倍，不改变通道数
         self.fuse = nn.Sequential(nn.Conv2d(in_channels=in_channel + out_channel, out_channels=out_channel,
                                             kernel_size=1, padding=0, bias=False),
