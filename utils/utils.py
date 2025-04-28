@@ -80,15 +80,14 @@ def train_val(
         batch_img2 = batch_img2.float().to(device)
         labels = labels.float().to(device)
 
-        # seg_label的格式(B, H/2, W/2)
-        # seg_label = F.interpolate(labels.unsqueeze(1), scale_factor=1 / 2, mode='bilinear').squeeze(1).to(device)
+
 
         if mode == 'train':
             # using amp
             with torch.cuda.amp.autocast():
                 # preds格式为(B,1,H,W),不再是tuple元组了
                 preds = net(batch_img1, batch_img2) # 前向传播
-                loss = criterion(preds, labels) # labels的格式为(1,h,w)
+                loss = criterion(preds, labels) # labels的格式为(B,h,w)
             cd_loss = sum(loss)
             grad_scaler.scale(cd_loss).backward() # 反向传播
             torch.nn.utils.clip_grad_norm_(net.parameters(), 20, norm_type=2)
