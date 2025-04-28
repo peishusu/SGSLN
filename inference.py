@@ -17,13 +17,13 @@ def train_net(dataset_name, load_checkpoint=True):
     # 1. Create dataset
 
     # compute mean and std of train dataset to normalize train/val/test dataset
-    t1_mean, t1_std = compute_mean_std(images_dir=f'./{dataset_name}/train/t1/')
-    t2_mean, t2_std = compute_mean_std(images_dir=f'./{dataset_name}/train/t2/')
+    t1_mean, t1_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t1/')
+    t2_mean, t2_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t2/')
 
     dataset_args = dict(t1_mean=t1_mean, t1_std=t1_std, t2_mean=t2_mean, t2_std=t2_std)
-    test_dataset = BasicDataset(t1_images_dir=f'./{dataset_name}/test/t1/',
-                                t2_images_dir=f'./{dataset_name}/test/t2/',
-                                labels_dir=f'./{dataset_name}/test/label/',
+    test_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/test/t1/',
+                                t2_images_dir=f'../datasets/{dataset_name}/test/t2/',
+                                labels_dir=f'../datasets/{dataset_name}/test/label/',
                                 train=False, **dataset_args)
     # 2. Create data loaders
     loader_args = dict(num_workers=8,

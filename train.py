@@ -86,19 +86,19 @@ def train_net(dataset_name):
     # 1. Create dataset, checkpoint and best model path
 
     # 分别计算 t1文件中所有图像的均值、标准差
-    t1_mean, t1_std = compute_mean_std(images_dir=f'./{dataset_name}/train/t1/')
-    t2_mean, t2_std = compute_mean_std(images_dir=f'./{dataset_name}/train/t2/')
+    t1_mean, t1_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t1/')
+    t2_mean, t2_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t2/')
 
 
     dataset_args = dict(t1_mean=t1_mean, t1_std=t1_std, t2_mean=t2_mean, t2_std=t2_std)
 
-    train_dataset = BasicDataset(t1_images_dir=f'./{dataset_name}/train/t1/',
-                                 t2_images_dir=f'./{dataset_name}/train/t2/',
-                                 labels_dir=f'./{dataset_name}/train/label/',
+    train_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/train/t1/',
+                                 t2_images_dir=f'../datasets/{dataset_name}/train/t2/',
+                                 labels_dir=f'../datasets/{dataset_name}/train/label/',
                                  train=True, **dataset_args)
-    val_dataset = BasicDataset(t1_images_dir=f'./{dataset_name}/val/t1/',
-                               t2_images_dir=f'./{dataset_name}/val/t2/',
-                               labels_dir=f'./{dataset_name}/val/label/',
+    val_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/val/t1/',
+                               t2_images_dir=f'../datasets/{dataset_name}/val/t2/',
+                               labels_dir=f'../datasets/{dataset_name}/val/label/',
                                train=False, **dataset_args)
 
     # 2. 通过调用 BasicDataset 类中的 __len__() 方法来获取数据集的大小，即训练集和验证集的样本数量。
