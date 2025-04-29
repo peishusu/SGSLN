@@ -15,7 +15,8 @@ class Path_Hyperparameter:
     weight_decay: float = 1e-3  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not
     load: str = False
-    # load: str = './S2Looking_datasets_best_f1score_model/best_f1score_epoch258_Sun Apr 13 02:34:04 2025.pth'  # Load model and/or optimizer from a .pth file for testing or continuing training
+    # 用于测试已经训练好的 模型
+    # load: str = '/home/chenyuxiang/Desktop/ShenPei/change_detection/SGSLN/SYSU-CD_best_f1score_model/best_f1score_epoch203_Mon Apr 28 22:45:22 2025.pth'  # Load model and/or optimizer from a .pth file for testing or continuing training
     max_norm: float = 20  # gradient clip max norm
 
     # evaluate hyper-parameter

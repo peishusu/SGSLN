@@ -282,7 +282,6 @@ class Encoder_Block(nn.Module):
 class Decoder_Block(nn.Module):
     """
         Basic block in decoder.
-        将
     """
 
     def __init__(self, in_channel, out_channel):
@@ -295,13 +294,32 @@ class Decoder_Block(nn.Module):
                                   nn.BatchNorm2d(out_channel),
                                   nn.ReLU(inplace=True),
                                   )
+        self.attention = SEBlock(out_channel) # 添加了通道注意力机制
 
     def forward(self, de, en):
         de = self.up(de) # de就变成b,c 2h,2w
         output = torch.cat([de, en], dim=1)
         output = self.fuse(output)
-
+        output = self.attention(output)
         return output
+
+# 简单的通道注意力机制，这个 SEBlock 不会导致输入输出格式不一致。
+class SEBlock(nn.Module):
+    def __init__(self, channel, reduction=16):
+        super().__init__()
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(channel, channel // reduction, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Linear(channel // reduction, channel, bias=False),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        b, c, _, _ = x.size()
+        y = self.avg_pool(x).view(b, c)  # [B, C]
+        y = self.fc(y).view(b, c, 1, 1)  # [B, C, 1, 1]
+        return x * y.expand_as(x)
 
 
 '''

@@ -65,22 +65,22 @@ class BasicDataset(Dataset):
         logging.info(f'Creating dataset with {len(self.t1_ids)} examples')
 
         self.train_transforms_all = A.Compose([
-            A.Flip(p=0.5),
-            A.Transpose(p=0.5),
-            A.Rotate(45, p=0.3),
-            A.ShiftScaleRotate(p=0.3),
+            A.Flip(p=0.5), # 随机翻转（水平或垂直）；
+            A.Transpose(p=0.5), # 转置（交换行列
+            A.Rotate(45, p=0.3), # 随机旋转最大 ±45°；
+            A.ShiftScaleRotate(p=0.3),# 平移、缩放、旋转。
         ], additional_targets={'image1': 'image'})
 
         self.train_transforms_image = A.Compose(
             [A.OneOf([
-                A.GaussNoise(p=1),
-                A.HueSaturationValue(p=1),
-                A.RandomBrightnessContrast(p=1),
-                A.RandomGamma(p=1),
-                A.Emboss(p=1),
-                A.MotionBlur(p=1),
+                A.GaussNoise(p=1), # 给图像加高斯噪声（模仿传感器噪声）
+                A.HueSaturationValue(p=1),#  调整色调、饱和度、明度（模拟光照色彩变化）
+                A.RandomBrightnessContrast(p=1), # 随机调节亮度和对比度
+                A.RandomGamma(p=1), # 	γ变换，调整整体亮暗分布（非线性增强）
+                A.Emboss(p=1), # 浮雕效果（增强边缘）
+                A.MotionBlur(p=1), # 运动模糊（模拟物体快速移动时的模糊现象）
             ], p=ph.noise_p)],
-            additional_targets={'image1': 'image'})
+            additional_targets={'image1': 'image'})  # 保证 image 和 image1 同步增强
 
         self.t1_normalize = A.Compose([
             A.Normalize(

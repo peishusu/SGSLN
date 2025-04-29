@@ -103,10 +103,13 @@ class DPCD(nn.Module):
 
         self.conv_out_change = nn.Conv2d(8, 1, kernel_size=7, stride=1, padding=3)
 
+        self.dropout_en = nn.Dropout(p=0.3)  # 你可以根据实际调整 p
+
 
         # init parameters
         # using pytorch default init is enough
-        # self.init_params()
+        # 把初始化打开！！有助于网络收敛更快、最终性能也更好
+        self.init_params()
 
     def init_params(self):
         for m in self.modules():
@@ -237,6 +240,10 @@ class DPCD(nn.Module):
         change = self.upsample_x2(change_s2)
         # change_out的格式(B,1,H,W)
         change_out = self.conv_out_change(change)
+
+        # 加一个dropout正则话，防止过拟合
+        if self.training:
+            change_out = self.dropout_en(change_out)
 
         # change_out的输出格式确实为(1,1,h,w)
         return change_out

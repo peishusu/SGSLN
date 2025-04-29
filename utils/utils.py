@@ -88,7 +88,7 @@ def train_val(
                 # preds格式为(B,1,H,W),不再是tuple元组了
                 preds = net(batch_img1, batch_img2) # 前向传播
                 loss = criterion(preds, labels) # labels的格式为(B,h,w)
-            cd_loss = sum(loss)
+            cd_loss = loss[0]
             grad_scaler.scale(cd_loss).backward() # 反向传播
             torch.nn.utils.clip_grad_norm_(net.parameters(), 20, norm_type=2)
             grad_scaler.step(optimizer)
@@ -96,7 +96,7 @@ def train_val(
         else:
             preds = net(batch_img1, batch_img2)
             loss = criterion(preds, labels)
-            cd_loss = sum(loss)
+            cd_loss = loss[0]
 
         epoch_loss += cd_loss
         # preds从元组 -> (1B,2,H，W)
@@ -119,6 +119,7 @@ def train_val(
 
         preds = preds.float()  #格式为(1,2,h,w)
         labels = labels.int().unsqueeze(1) # labels从(1,512,512)->变成 (1,1,512,512)
+        # batch_metrices指的是当前batch的指标
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
 
         # log loss and metric
@@ -129,8 +130,8 @@ def train_val(
             f'{mode} recall': batch_metrics['recall'],
             f'{mode} f1score': batch_metrics['f1score'],
             'learning rate': optimizer.param_groups[0]['lr'],
-            f'{mode} loss_dice': loss[0],
-            f'{mode} loss_bce': loss[1],
+            f'{mode} loss_dice': loss[1],
+            f'{mode} loss_bce': loss[2],
             'step': total_step,
             'epoch': epoch
         })
@@ -143,6 +144,7 @@ def train_val(
         del batch_img1, batch_img2, labels
 
     # epoch_metric是一个dict,key是accuray/recall/f1score/precision,value是其对应的值
+    # epoch_metric 指的是整epoch所有batch的累积平均指标
     epoch_metrics = metric_collection.compute()  # compute epoch metric
     epoch_loss /= n_iter  # n_iter代表图片的总数量，epoch_loss代表平均损失多少
 
