@@ -59,7 +59,5 @@ def FCCDN_loss_without_seg(scores, labels):
     # 定义了一个损失函数，dice_focal_loss 是一种结合了 Dice 系数和焦点损失的损失函数。Dice 损失用于衡量预测与真实标签之间的相似度，Focal 损失主要解决类别不平衡的问题，特别适用于变化检测等任务。
     criterion_change = dice_focal_loss()
 
-    # change loss
-    # 计算第一类变化检测的损失。scores[0] 和 labels[0] 分别代表预测结果和真实标签的第一个元素
     loss_change = criterion_change(scores, labels)
     return loss_change

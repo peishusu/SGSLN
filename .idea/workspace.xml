@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="过拟合处理--添加了关于dropout-以及损失函数的修改">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/losses_new.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/losses_new.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,6 +262,7 @@
       <workItem from="1745842350528" duration="362000" />
       <workItem from="1745849560510" duration="821000" />
       <workItem from="1745889215387" duration="7153000" />
+      <workItem from="1745911753241" duration="4881000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -358,7 +360,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745895262833</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="过拟合处理--添加了关于dropout-以及损失函数的修改">
+      <option name="closed" value="true" />
+      <created>1745912011074</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1745912011074</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
