@@ -109,7 +109,7 @@ class DPCD(nn.Module):
         # init parameters
         # using pytorch default init is enough
         # 把初始化打开！！有助于网络收敛更快、最终性能也更好
-        self.init_params()
+        # self.init_params()
 
     def init_params(self):
         for m in self.modules():

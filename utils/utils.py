@@ -88,7 +88,8 @@ def train_val(
                 # preds格式为(B,1,H,W),不再是tuple元组了
                 preds = net(batch_img1, batch_img2) # 前向传播
                 loss = criterion(preds, labels) # labels的格式为(B,h,w)
-            cd_loss = loss[0]
+            # cd_loss = loss[0]
+            cd_loss=sum(loss)
             grad_scaler.scale(cd_loss).backward() # 反向传播
             torch.nn.utils.clip_grad_norm_(net.parameters(), 20, norm_type=2)
             grad_scaler.step(optimizer)
@@ -96,7 +97,8 @@ def train_val(
         else:
             preds = net(batch_img1, batch_img2)
             loss = criterion(preds, labels)
-            cd_loss = loss[0]
+            # cd_loss = loss[0]
+            cd_loss=sum(loss)
 
         epoch_loss += cd_loss
         # preds从元组 -> (1B,2,H，W)
@@ -130,8 +132,8 @@ def train_val(
             f'{mode} recall': batch_metrics['recall'],
             f'{mode} f1score': batch_metrics['f1score'],
             'learning rate': optimizer.param_groups[0]['lr'],
-            f'{mode} loss_dice': loss[1],
-            f'{mode} loss_bce': loss[2],
+            f'{mode} loss_dice': loss[0],
+            f'{mode} loss_bce': loss[1],
             'step': total_step,
             'epoch': epoch
         })
