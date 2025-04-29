@@ -242,8 +242,8 @@ class DPCD(nn.Module):
         change_out = self.conv_out_change(change)
 
         # 加一个dropout正则话，防止过拟合
-        if self.training:
-            change_out = self.dropout_en(change_out)
+        # if self.training:
+        #     change_out = self.dropout_en(change_out)
 
         # change_out的输出格式确实为(1,1,h,w)
         return change_out
