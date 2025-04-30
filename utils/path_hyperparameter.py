@@ -7,7 +7,7 @@ class Path_Hyperparameter:
     # training hyper-parameter
     epochs: int = 220  # Number of epochs
     batch_size: int = 1  # Batch size
-    inference_ratio = 2  # batch_size in val and test equal to batch_size*inference_ratio
+    inference_ratio = 1  # batch_size in val and test equal to batch_size*inference_ratio
     learning_rate: float = 2e-4  # Learning rate
     factor = 0.1  # learning rate decreasing factor
     patience = 10  # schedular patience

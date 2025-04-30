@@ -4,7 +4,7 @@ from utils.data_loading import BasicDataset
 import logging
 from utils.path_hyperparameter import ph
 import torch
-from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score
+from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score,JaccardIndex
 # from models.Models import DPCD
 from models.Models_trans import DPCD
 from utils.dataset_process import compute_mean_std
@@ -56,7 +56,8 @@ def train_net(dataset_name, load_checkpoint=True):
         'accuracy': Accuracy().to(device=device),
         'precision': Precision().to(device=device),
         'recall': Recall().to(device=device),
-        'f1score': F1Score().to(device=device)
+        'f1score': F1Score().to(device=device),
+        'IoU': JaccardIndex(num_classes=2, task="binary").to(device=device)
     })  # metrics calculator
 
     net.eval()

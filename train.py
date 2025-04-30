@@ -9,8 +9,8 @@ from torch.utils.data import DataLoader
 from utils.data_loading import BasicDataset
 from utils.path_hyperparameter import ph
 import torch
-from utils.losses import FCCDN_loss_without_seg
-# from utils.losses_new import FCCDN_loss_without_seg
+# from utils.losses import FCCDN_loss_without_seg
+from utils.losses_new import FCCDN_loss_without_seg
 
 import os
 import logging
