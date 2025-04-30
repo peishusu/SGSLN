@@ -181,7 +181,7 @@ def train_net(dataset_name):
     criterion = FCCDN_loss_without_seg  # loss function 定义的一个损失函数
 
     # 初始化用于模型评估的最佳指标和计算指标的集合，这里['best_f1score', 'lowest loss'] 是字典的键，0 是每个键的默认值。
-    best_metrics = dict.fromkeys(['best_f1score', 'lowest loss'], 0)  # best evaluation metrics
+    best_metrics = dict.fromkeys(['best_f1score','best_precision','best_recall'], 0)  # best evaluation metrics
     # 一个用来组织和计算多种评估指标的工具。在 PyTorch 中，MetricCollection 是一种便捷方式，它允许我们在训练过程中同时计算多个不同的评估指标。
     metric_collection = MetricCollection({
         'accuracy': Accuracy().to(device=device),
@@ -196,7 +196,7 @@ def train_net(dataset_name):
     # model saved path
     # 创建了模型保存的路径，用于存储模型的训练检查点和最佳模型
     checkpoint_path = f'./{dataset_name}_checkpoint/'
-    best_f1score_model_path = f'./{dataset_name}_best_f1score_model/'
+    best_model_path = f'./{dataset_name}_best_model/'
     best_loss_model_path = f'./{dataset_name}_best_loss_model/'
 
     # 用于跟踪连续多少个 epoch 中模型的性能（例如，F1 分数或损失）没有改善。如果模型在一定的 patience 轮次内没有提升（即 F1 分数没有变好或损失没有降低），可以采取一些操作，比如降低学习率或提前停止训练。
@@ -227,7 +227,7 @@ def train_net(dataset_name):
                         optimizer=optimizer, total_step=total_step, lr=lr, criterion=criterion,
                         metric_collection=metric_collection, to_pilimg=to_pilimg, epoch=epoch,
                         best_metrics=best_metrics, checkpoint_path=checkpoint_path,
-                        best_f1score_model_path=best_f1score_model_path, best_loss_model_path=best_loss_model_path,
+                        best_model_path=best_model_path, best_loss_model_path=best_loss_model_path,
                         non_improved_epoch=non_improved_epoch
                     )
     # 放在整个训练结束后

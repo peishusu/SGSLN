@@ -38,7 +38,7 @@ def train_val(
         lr, criterion, metric_collection, to_pilimg, epoch,
         warmup_lr=None, grad_scaler=None,
         best_metrics=None, checkpoint_path=None,
-        best_f1score_model_path=None, best_loss_model_path=None, non_improved_epoch=None
+        best_model_path=None, best_loss_model_path=None, non_improved_epoch=None
 ):
     assert mode in ['train', 'val'], 'mode should be train, val'
     epoch_loss = 0 # 初始化累计损失
@@ -172,16 +172,58 @@ def train_val(
     })  # log the t1_img, t2_img, pred and label
 
     # save best model and adjust learning rate according to learning rate scheduler
+    # if mode == 'val':
+    #     if epoch_metrics['f1score'] > best_metrics['best_f1score']:
+    #         non_improved_epoch = 0
+    #         best_metrics['best_f1score'] = epoch_metrics['f1score']
+    #         if ph.save_best_model:
+    #             save_model(net, best_f1score_model_path, epoch, 'f1score')
+    #
+    #     elif epoch_loss < best_metrics['lowest loss']:
+    #         best_metrics['lowest loss'] = epoch_loss
+    #         if ph.save_best_model:
+    #             save_model(net, best_loss_model_path, epoch, 'loss')
+    #     else:
+    #         non_improved_epoch += 1
+    #         if non_improved_epoch == ph.patience:
+    #             lr *= ph.factor
+    #             for g in optimizer.param_groups:
+    #                 g['lr'] = lr
+    #             non_improved_epoch = 0
+    #
+
+
+    # 保存最好的模型
     if mode == 'val':
-        if epoch_metrics['f1score'] > best_metrics['best_f1score']:
+        improved_metrics = 0
+        current_metrics = {
+            'precision': epoch_metrics['precision'],
+            'recall': epoch_metrics['recall'],
+            'f1score': epoch_metrics['f1score']
+        }
+
+        for metric_name, current_value in current_metrics.items():
+            best_value = best_metrics.get(f'best_{metric_name}', 0)
+            if current_value > best_value:
+                improved_metrics += 1
+
+        if improved_metrics >= 2:
+            # 更新最佳指标
+            for metric_name, current_value in current_metrics.items():
+                best_metrics[f'best_{metric_name}'] = current_value
+
             non_improved_epoch = 0
-            best_metrics['best_f1score'] = epoch_metrics['f1score']
+
             if ph.save_best_model:
-                save_model(net, best_f1score_model_path, epoch, 'f1score')
-        elif epoch_loss < best_metrics['lowest loss']:
-            best_metrics['lowest loss'] = epoch_loss
-            if ph.save_best_model:
-                save_model(net, best_loss_model_path, epoch, 'loss')
+                save_model(net, best_model_path, epoch, 'multi_metric')
+
+            # 记录指标到 W&B
+            log_wandb.log({
+                f'{mode}_{epoch}_best_precision': current_metrics['precision'],
+                f'{mode}_{epoch}_best_recall': current_metrics['recall'],
+                f'{mode}_{epoch}_best_f1score': current_metrics['f1score'],
+                'cur_epoch': epoch
+            })
         else:
             non_improved_epoch += 1
             if non_improved_epoch == ph.patience:
@@ -194,6 +236,8 @@ def train_val(
         if (epoch + 1) % ph.save_interval == 0 and ph.save_checkpoint:
             save_model(net, checkpoint_path, epoch, 'checkpoint', optimizer=optimizer)
 
+
+    # 返回最终的结果
     if mode == 'train':
         return log_wandb, net, optimizer, grad_scaler, total_step, lr
     elif mode == 'val':

@@ -10,7 +10,7 @@ class Path_Hyperparameter:
     inference_ratio = 2  # batch_size in val and test equal to batch_size*inference_ratio
     learning_rate: float = 2e-4  # Learning rate
     factor = 0.1  # learning rate decreasing factor
-    patience = 12  # schedular patience
+    patience = 10  # schedular patience
     warm_up_step = 500  # warm up step
     weight_decay: float = 1e-3  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not
