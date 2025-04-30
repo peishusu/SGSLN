@@ -245,6 +245,6 @@ class DPCD(nn.Module):
         # if self.training:
         #     change_out = self.dropout_en(change_out)
 
-        # change_out的输出格式确实为(1,1,h,w)
+        # change_out的输出格式确实为(B,1,h,w)
         return change_out
 

@@ -101,7 +101,8 @@ def train_val(
             cd_loss=sum(loss)
 
         epoch_loss += cd_loss
-        # preds从元组 -> (1B,2,H，W)
+        # preds从元组 -> (1B,1,H，W)
+        # preds_bin = (torch.sigmoid(preds) > threshold)
         preds = torch.sigmoid(preds)
 
         # log the t1_img, t2_img, pred and label
@@ -119,8 +120,8 @@ def train_val(
             # pred_log[pred_log < 0.5] = 0
             # pred_log = pred_log.float()
 
-        preds = preds.float()  #格式为(1,2,h,w)
-        labels = labels.int().unsqueeze(1) # labels从(1,512,512)->变成 (1,1,512,512)
+        preds = preds.float()  #格式为(1,1,h,w)
+        labels = labels.int().unsqueeze(1) # labels从(B,512,512)->变成 (B,1,512,512)
         # batch_metrices指的是当前batch的指标
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
 
@@ -131,6 +132,8 @@ def train_val(
             f'{mode} precision': batch_metrics['precision'],
             f'{mode} recall': batch_metrics['recall'],
             f'{mode} f1score': batch_metrics['f1score'],
+            f'{mode} iou':batch_metrics['IoU'],
+
             'learning rate': optimizer.param_groups[0]['lr'],
             f'{mode} loss_dice': loss[0],
             f'{mode} loss_bce': loss[1],
@@ -171,35 +174,13 @@ def train_val(
         'epoch': epoch
     })  # log the t1_img, t2_img, pred and label
 
-    # save best model and adjust learning rate according to learning rate scheduler
-    # if mode == 'val':
-    #     if epoch_metrics['f1score'] > best_metrics['best_f1score']:
-    #         non_improved_epoch = 0
-    #         best_metrics['best_f1score'] = epoch_metrics['f1score']
-    #         if ph.save_best_model:
-    #             save_model(net, best_f1score_model_path, epoch, 'f1score')
-    #
-    #     elif epoch_loss < best_metrics['lowest loss']:
-    #         best_metrics['lowest loss'] = epoch_loss
-    #         if ph.save_best_model:
-    #             save_model(net, best_loss_model_path, epoch, 'loss')
-    #     else:
-    #         non_improved_epoch += 1
-    #         if non_improved_epoch == ph.patience:
-    #             lr *= ph.factor
-    #             for g in optimizer.param_groups:
-    #                 g['lr'] = lr
-    #             non_improved_epoch = 0
-    #
-
-
-    # 保存最好的模型
     if mode == 'val':
         improved_metrics = 0
         current_metrics = {
             'precision': epoch_metrics['precision'],
             'recall': epoch_metrics['recall'],
-            'f1score': epoch_metrics['f1score']
+            'f1score': epoch_metrics['f1score'],
+            'IoU': epoch_metrics['IoU']  # 新增
         }
 
         for metric_name, current_value in current_metrics.items():
@@ -207,7 +188,7 @@ def train_val(
             if current_value > best_value:
                 improved_metrics += 1
 
-        if improved_metrics >= 2:
+        if improved_metrics >= 3:
             # 更新最佳指标
             for metric_name, current_value in current_metrics.items():
                 best_metrics[f'best_{metric_name}'] = current_value
@@ -222,7 +203,7 @@ def train_val(
                 f'{mode}_{epoch}_best_precision': current_metrics['precision'],
                 f'{mode}_{epoch}_best_recall': current_metrics['recall'],
                 f'{mode}_{epoch}_best_f1score': current_metrics['f1score'],
-                'cur_epoch': epoch
+                f'{mode}_{epoch}_best_IoU': current_metrics['IoU']
             })
         else:
             non_improved_epoch += 1

@@ -19,7 +19,7 @@ import wandb
 # from models.Models import DPCD
 from models.Models_trans import DPCD
 
-from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score
+from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score,JaccardIndex
 from utils.utils import train_val
 from utils.dataset_process import compute_mean_std
 from utils.dataset_process import image_shuffle, split_image
@@ -181,13 +181,15 @@ def train_net(dataset_name):
     criterion = FCCDN_loss_without_seg  # loss function 定义的一个损失函数
 
     # 初始化用于模型评估的最佳指标和计算指标的集合，这里['best_f1score', 'lowest loss'] 是字典的键，0 是每个键的默认值。
-    best_metrics = dict.fromkeys(['best_f1score','best_precision','best_recall'], 0)  # best evaluation metrics
+    best_metrics = dict.fromkeys(['best_f1score','best_precision','best_recall','best_IoU'], 0)  # best evaluation metrics
     # 一个用来组织和计算多种评估指标的工具。在 PyTorch 中，MetricCollection 是一种便捷方式，它允许我们在训练过程中同时计算多个不同的评估指标。
     metric_collection = MetricCollection({
         'accuracy': Accuracy().to(device=device),
         'precision': Precision().to(device=device),
         'recall': Recall().to(device=device),
-        'f1score': F1Score().to(device=device)
+        'f1score': F1Score().to(device=device),
+        'IoU': JaccardIndex(num_classes=2, task="binary").to(device=device)
+
     })  # metrics calculator
 
     #  PyTorch 中的一个工具函数，它将 PyTorch Tensor 转换为 PIL 图像对象。PIL 图像是 Python Imaging Library（或 Pillow）使用的一种图像格式，可以用于显示或保存图像

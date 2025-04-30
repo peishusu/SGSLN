@@ -2,10 +2,10 @@ class Path_Hyperparameter:
     random_seed = 42
 
     # dataset hyper-parameter
-    dataset_name = 'SYSU-CD'
+    dataset_name = 'CLCD'
 
     # training hyper-parameter
-    epochs: int = 250  # Number of epochs
+    epochs: int = 220  # Number of epochs
     batch_size: int = 1  # Batch size
     inference_ratio = 2  # batch_size in val and test equal to batch_size*inference_ratio
     learning_rate: float = 2e-4  # Learning rate
@@ -20,7 +20,7 @@ class Path_Hyperparameter:
     max_norm: float = 20  # gradient clip max norm
 
     # evaluate hyper-parameter
-    evaluate_epoch: int = 200  # start evaluate after training for evaluate epochs
+    evaluate_epoch: int = 180  # start evaluate after training for evaluate epochs
     stage_epoch = [0, 0, 0, 0, 0]  # adjust learning rate after every stage epoch
     save_checkpoint: bool = True  # if save checkpoint of model or not
     save_interval: int = 10  # save checkpoint every interval epoch
@@ -33,7 +33,7 @@ class Path_Hyperparameter:
     noise_p: float = 0.1  # probability of adding noise
 
     # model hyper-parameter
-    dropout_p: float = 0.3  # probability of dropout
+    dropout_p: float = 0.5  # probability of dropout
     patch_size: int = 512  # size of input image
 
     y = 2  # ECA-net parameter
