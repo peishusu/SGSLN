@@ -2,7 +2,7 @@ class Path_Hyperparameter:
     random_seed = 42
 
     # dataset hyper-parameter
-    dataset_name = 'CLCD'
+    dataset_name = 'SYSU-CD'
 
     # training hyper-parameter
     epochs: int = 250  # Number of epochs
@@ -12,7 +12,7 @@ class Path_Hyperparameter:
     factor = 0.1  # learning rate decreasing factor
     patience = 10  # schedular patience
     warm_up_step = 500  # warm up step
-    weight_decay: float = 1e-3  # AdamW optimizer weight decay
+    weight_decay: float = 2e-3  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not
     load: str = False
     # 用于测试已经训练好的 模型
@@ -27,13 +27,13 @@ class Path_Hyperparameter:
     save_best_model: bool = True  # if save best model or not
 
     # log wandb hyper-parameter
-    log_wandb_project: str = 'dpcd'  # wandb project name
+    log_wandb_project: str = 'change_detection'  # wandb project name
 
     # data transform hyper-parameter
-    noise_p: float = 0.3  # probability of adding noise
+    noise_p: float = 0.1  # probability of adding noise
 
     # model hyper-parameter
-    dropout_p: float = 0.1  # probability of dropout
+    dropout_p: float = 0.3  # probability of dropout
     patch_size: int = 512  # size of input image
 
     y = 2  # ECA-net parameter
