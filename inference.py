@@ -30,6 +30,7 @@ def train_net(dataset_name, load_checkpoint=True):
                        prefetch_factor=5,
                        persistent_workers=True
                        )
+
     test_loader = DataLoader(test_dataset, shuffle=False, drop_last=False,
                              batch_size=ph.batch_size * ph.inference_ratio, **loader_args)
 
@@ -69,7 +70,7 @@ def train_net(dataset_name, load_checkpoint=True):
             batch_img2 = batch_img2.float().to(device)
             labels = labels.float().to(device)
 
-            cd_preds = net(batch_img1, batch_img2, log=True, img_name=name)
+            cd_preds = net(batch_img1, batch_img2)
             cd_preds = torch.sigmoid(cd_preds)
 
             # Calculate and log other batch metrics
