@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="添加iou指标">
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="inference文件修改,删除日志部分">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/inference.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/dataset_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_process.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -268,7 +267,15 @@
       <workItem from="1746001074560" duration="12548000" />
       <workItem from="1746025620808" duration="1307000" />
       <workItem from="1746066263650" duration="312000" />
-      <workItem from="1746105757085" duration="4085000" />
+      <workItem from="1746105757085" duration="5250000" />
+      <workItem from="1746111323701" duration="315000" />
+      <workItem from="1746115189379" duration="189000" />
+      <workItem from="1746148468709" duration="401000" />
+      <workItem from="1746149276869" duration="1337000" />
+      <workItem from="1746153346065" duration="6000000" />
+      <workItem from="1746352772176" duration="1474000" />
+      <workItem from="1746371855798" duration="1307000" />
+      <workItem from="1746411521692" duration="1313000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -414,7 +421,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746026055539</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="inference文件修改,删除日志部分">
+      <option name="closed" value="true" />
+      <created>1746110415630</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1746110415630</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -444,7 +459,8 @@
     <MESSAGE value="最好指标标准 修改" />
     <MESSAGE value="过拟合问题 调参" />
     <MESSAGE value="添加iou指标" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加iou指标" />
+    <MESSAGE value="inference文件修改,删除日志部分" />
+    <option name="LAST_COMMIT_MESSAGE" value="inference文件修改,删除日志部分" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -12,21 +12,10 @@ import shutil
 
 
 def verify_correspondence(dataset_name, mode=None):
-    """ Verify correspondence between train/val/test dataset.
-
-    Make sure there are corresponding images with the same name in :obj:`t1_images_dir`,
-    :obj:`t2_images_dir` and :obj:`label_images_dir`.
-
-    Notice that if mode is None,
-    image path should be organized as :obj:`dataset_name`/`t1` or `t2` or `label`/ , else
-    be organized as :obj:`dataset_name`/:obj:`mode`/`t1` or `t2` or `label`/ .
-
-    Parameter:
-        dataset_name(str): name of the specified dataset.
-        mode(str): ensure whether verifying train, val or test dataset.
-
-    Return:
-        return correspondence verified result.
+    """
+        验证数据集中 t1、t2 和 label 目录中的图像是否一一对应，即确保每个图像在这三个目录中都有相同的文件名。
+        dataset_name：要验证的数据集名称，例如 'CLCD'。
+        mode：指定验证的数据集类型，是训练集（train）、验证集（val）还是测试集（test）。如果 mode 为 None，则验证整个数据集中的图像。
     """
 
     if mode is None:
@@ -54,17 +43,11 @@ def verify_correspondence(dataset_name, mode=None):
 
 def delete_monochrome_image(dataset_name, mode=None):
     """ Delete monochrome images in dataset.
-
-    Delete whole black and whole white image in label directory
-    and corresponding image in t1 and t2 directory.
-
-    Notice that if mode is None,
-    image path should be organized as :obj:`dataset_name`/`t1` or `t2` or `label`/ , else
-    be organized as :obj:`dataset_name`/:obj:`mode`/`t1` or `t2` or `label`/ .
+    作用是删除数据集中的单色图像（即全黑或全白的图像）。具体来说，它会删除标签目录（label）中全黑或全白的图像以及对应的 t1 和 t2 目录中的图像。
 
     Parameter:
-        dataset_name(str): name of the specified dataset.
-        mode(str): ensure whether verifying train, val or test dataset.
+        dataset_name(str): 指定的数据集名称。
+        mode(str): 指定要操作的子集，可以是 'train'、'val' 或 'test'，默认为 None，表示操作整个数据集。
 
     Return:
         return nothing
@@ -160,27 +143,12 @@ def compute_mean_std(images_dir):
 
 
 def crop_img(dataset_name, pre_size, after_size, overlap_size):
-    """Crop dataset images.
-
-    Crop image from :math:`pre_size` × :math:`pre_size` to
-    :math:`after_size` × :math:`after_size` with :math:`overlap_size` overlap for train dataset,
-    and without overlap for validation and test dataset.
-
-    The :math:(:math:`pre_size` - :math:`after size`) should be multiple of
-    :math:(:math:`after_size` - :math:`overlap_size`),
-    and :math:`pre_size` should be multiple of :math:`after size`.
-
-    Notice that image path should be organized as
-    :obj:`dataset_name`/`train` or `val` or `test`/`t1` or `t2` or `label`/.
-
-    Parameter:
-        dataset_name(str): name of the specified dataset.
-        pre_size(int): image size before crop.
-        after_size(int): image size after crop.
-        overlap_size(int): images overlap size while crop in train dataset.
-
-    Return:
-        return nothing.
+    """
+        将数据集中的图像裁剪成多个较小的图像。根据设定的裁剪大小（after_size），它可以根据给定的重叠大小（overlap_size）进行训练集裁剪，或者在验证集和测试集上进行无重叠的裁剪。
+        dataset_name(str)：指定数据集的名称。
+        pre_size(int)：裁剪前的原始图像大小（假设是正方形图像），例如，原图为1024x1024。
+        after_size(int)：裁剪后的目标图像大小，例如裁剪成512x512的图像。
+        overlap_size(int)：训练集裁剪时的重叠区域的大小，验证集和测试集则没有重叠。
     """
 
     if (pre_size - after_size % after_size - overlap_size != 0) or (pre_size % after_size != 0):
@@ -259,12 +227,7 @@ def crop_img(dataset_name, pre_size, after_size, overlap_size):
 def image_shuffle(dataset_name):
     """ Shuffle dataset images.
 
-    Shuffle images in dataset to random split images to train, val and test later.
-
-    Notice that image path should be organized as :obj:`dataset_name`/`t1` or `t2` or `label`/.
-
-    Parameter:
-        dataset_name(str): name of the specified dataset.
+    随机打乱图像：代码通过打乱图像文件的顺序，将数据集中的每张图像重新命名。图像包括 t1（例如源图像）、t2（例如目标图像）和 label（例如标签图像），它们通常用于变化检测任务。
 
     Return:
         return nothing.
@@ -301,19 +264,8 @@ def image_shuffle(dataset_name):
 
 
 def split_image(dataset_name, fixed_ratio=True):
-    """ Split dataset images.
-
-    Split images to trian/val/test dataset with 7:2:1 ratio or corresponding specified number.
-
-    Notice that image path should be organized as :obj:`dataset_name`/`t1` or `t2` or `label`/.
-
-    Parameter:
-        dataset_name(str): name of the specified dataset.
-        fixed_ratio(bool): if True, split images with 7:2:1 ratio, else split with corresponding specified number,
-            which should be set in this function.
-
-    Return:
-        return nothing.
+    """
+        将数据集中的图像按一定比例（默认为 7:2:1，训练集、验证集和测试集的比例）或者指定数量（通过 fixed_ratio=False 设置）划分到三个子集：train（训练集）、val（验证集）和 test（测试集）。
     """
     source_image_dirs = [
         Path(f'./{dataset_name}/t1'),
@@ -375,18 +327,9 @@ def split_image(dataset_name, fixed_ratio=True):
 
 
 def crop_whole_image(dataset_name, crop_size):
-    """ Crop whole large image.
+    """
+        这段代码的作用是将整个大图像裁剪成小块，每个小块的大小为 crop_size × crop_size，并且没有重叠。裁剪后的图像将分别保存为 t1、t2 和 label 子目录下的图像。
 
-    Crop the whole large image into :math:`crop_size`×:math:`crop_size` image without overlap.
-
-    Notice source image path should be set in this function.
-
-    Parameter:
-        dataset_name(str): name of the specified dataset.
-        crop_size(int): image size after crop.
-
-    Return:
-        return nothing.
     """
 
     Image.MAX_IMAGE_PIXELS = None
@@ -400,11 +343,13 @@ def crop_whole_image(dataset_name, crop_size):
                  f'./{dataset_name}/t2/',
                  f'./{dataset_name}/label/'
                  ]
+    # 确保存储路径存在
     for path in save_path:
         Path(path).mkdir(parents=True, exist_ok=True)
+
     for n in tqdm(range(len(images_path))):
         image = Image.open(images_path[n])
-        w, h = image.size
+        w, h = image.size # 读取每个图像文件，获取其宽度 (w) 和高度 (h)。
         print(f'image size: {image.size}')
         for j in range(w // crop_size + 1):
             for i in range(h // crop_size + 1):
@@ -427,15 +372,10 @@ def crop_whole_image(dataset_name, crop_size):
 
 
 def compare_predset():
-    """Compare two pred set and save their difference.
+    """
+    比较两个预测结果集，并计算它们之间的差异，最后将这些差异存储到一个文件中。
+    具体来说，它比较两个不同的预测结果（比如 pred_set_1 和 pred_set_2）之间的差异，并根据差异的大小将它们排序，然后保存到一个 .npy 文件。
 
-    Notice that path of two pred set should be set in this function.
-
-    Parameter:
-        nothing.
-
-    Return:
-        return nothing.
     """
 
     # two pred set should be set first
@@ -527,9 +467,7 @@ def display_dataset_image(dataset_name, mode=None):
 def sample_dataset(dataset_name, mode=None, ratio=None, num=None):
     """ Random sample specified ratio or number of dataset.
 
-    Notice that if mode is None,
-    image path should be organized as :obj:`dataset_name`/`t1` or `t2` or `label`/ , else
-    be organized as :obj:`dataset_name`/:obj:`mode`/`t1` or `t2` or `label`/.
+    从指定的数据集中随机采样一定比例或者数量的图像，并将这些图像复制到另一个目录
 
     Parameter:
         dataset_name(str): name of the specified dataset.
