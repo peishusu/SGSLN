@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="inference文件修改,删除日志部分">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/dataset_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dataset_process.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,11 +41,11 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Python.train.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train.executor&quot;: &quot;Coverage&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/study/research/Exchanging Dual Encoder-Decoder A New/offical-SGSLN&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/study/research/HSANet&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -275,7 +275,15 @@
       <workItem from="1746153346065" duration="6000000" />
       <workItem from="1746352772176" duration="1474000" />
       <workItem from="1746371855798" duration="1307000" />
-      <workItem from="1746411521692" duration="1313000" />
+      <workItem from="1746411521692" duration="1766000" />
+      <workItem from="1746413309189" duration="1441000" />
+      <workItem from="1746494890726" duration="7591000" />
+      <workItem from="1746630244984" duration="6872000" />
+      <workItem from="1746686129762" duration="5027000" />
+      <workItem from="1746707427284" duration="594000" />
+      <workItem from="1746751930406" duration="1061000" />
+      <workItem from="1746877999359" duration="7583000" />
+      <workItem from="1746926457721" duration="4667000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -429,7 +437,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746110415630</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="inference文件修改,删除日志部分">
+      <option name="closed" value="true" />
+      <created>1746412965194</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1746412965194</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -466,19 +482,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/Models.py</url>
-          <line>123</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train.py</url>
           <line>210</line>
           <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/utils/utils.py</url>
-          <line>152</line>
-          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

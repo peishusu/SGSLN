@@ -82,6 +82,11 @@ def train_net(dataset_name, load_checkpoint=True):
             del batch_img1, batch_img2, labels
 
         test_metrics = metric_collection.compute()
+        # 替换 IoU 为 f1 / (2 - f1)
+        f1 = test_metrics['f1score'].item()
+        iou_from_f1 = f1 / (2 - f1) if (2 - f1) != 0 else 0.0
+        test_metrics['IoU'] = torch.tensor(iou_from_f1)
+
         print(f"Metrics on all data: {test_metrics}")
         metric_collection.reset()
 

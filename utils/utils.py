@@ -125,21 +125,21 @@ def train_val(
         # batch_metrices指的是当前batch的指标
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
 
-        # log loss and metric
-        log_wandb.log({
-            f'{mode} loss': cd_loss,
-            f'{mode} accuracy': batch_metrics['accuracy'],
-            f'{mode} precision': batch_metrics['precision'],
-            f'{mode} recall': batch_metrics['recall'],
-            f'{mode} f1score': batch_metrics['f1score'],
-            f'{mode} iou':batch_metrics['IoU'],
-
-            'learning rate': optimizer.param_groups[0]['lr'],
-            f'{mode} loss_dice': loss[0],
-            f'{mode} loss_bce': loss[1],
-            'step': total_step,
-            'epoch': epoch
-        })
+        # log loss and metric，单个step的记录注释掉
+        # log_wandb.log({
+        #     f'{mode} loss': cd_loss,
+        #     f'{mode} accuracy': batch_metrics['accuracy'],
+        #     f'{mode} precision': batch_metrics['precision'],
+        #     f'{mode} recall': batch_metrics['recall'],
+        #     f'{mode} f1score': batch_metrics['f1score'],
+        #     f'{mode} iou':batch_metrics['IoU'],
+        #
+        #     'learning rate': optimizer.param_groups[0]['lr'],
+        #     f'{mode} loss_dice': loss[0],
+        #     f'{mode} loss_bce': loss[1],
+        #     'step': total_step,
+        #     'epoch': epoch
+        # })
 
         # if torch.isnan(loss[0]):
         #     torch.save(preds, f'pred_{total_step}.pth')
@@ -153,7 +153,10 @@ def train_val(
     epoch_metrics = metric_collection.compute()  # compute epoch metric
     epoch_loss /= n_iter  # n_iter代表图片的总数量，epoch_loss代表平均损失多少
 
-
+    # 替换 IoU 为 f1 / (2 - f1),之前的关于iou的计算是存在问题的
+    f1_score = epoch_metrics['f1score']
+    iou_from_f1 = f1_score / (2 - f1_score) if (2 - f1_score) != 0 else 0.0
+    epoch_metrics['IoU'] = iou_from_f1
     #  # 将每个指标按mode（如train/val）和epoch分类记录到W&B仪表盘。
     for k in epoch_metrics.keys():
         log_wandb.log({f'epoch_{mode}_{str(k)}': epoch_metrics[k],
@@ -175,12 +178,16 @@ def train_val(
     })  # log the t1_img, t2_img, pred and label
 
     if mode == 'val':
+        f1_score = epoch_metrics['f1score']
+        iou_from_f1 = f1_score / (2 - f1_score) if (2 - f1_score) != 0 else 0.0
+        epoch_metrics['IoU'] = iou_from_f1
+
         improved_metrics = 0
         current_metrics = {
             'precision': epoch_metrics['precision'],
             'recall': epoch_metrics['recall'],
             'f1score': epoch_metrics['f1score'],
-            'IoU': epoch_metrics['IoU']  # 新增
+            'IoU': epoch_metrics['IoU']  # 使用新的 IoU
         }
 
         for metric_name, current_value in current_metrics.items():
