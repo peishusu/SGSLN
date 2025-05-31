@@ -1,5 +1,6 @@
 import sys
 import time
+from pathlib import Path
 
 import ipdb
 import numpy as np
@@ -81,27 +82,17 @@ def train_net(dataset_name):
     Return:
         return nothing
     """
-    # 1. Create dataset, checkpoint and best model path
-    # 分别计算 t1文件中所有图像的均值、标准差
-    # t1_mean, t1_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t1/')
-    # t2_mean, t2_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t2/')
-    #
-    #
-    # dataset_args = dict(t1_mean=t1_mean, t1_std=t1_std, t2_mean=t2_mean, t2_std=t2_std)
-    #
-    # train_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/train/t1/',
-    #                              t2_images_dir=f'../datasets/{dataset_name}/train/t2/',
-    #                              labels_dir=f'../datasets/{dataset_name}/train/label/',
-    #                              train=True, **dataset_args)
-    # val_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/val/t1/',
-    #                            t2_images_dir=f'../datasets/{dataset_name}/val/t2/',
-    #                            labels_dir=f'../datasets/{dataset_name}/val/label/',
-    #                            train=False, **dataset_args)
+
     dataset_name = ph.dataset_name
     # 使用自定义的 data_loader 模块加载训练/验证数据，返回 DataLoader 实例，供训练使用。
-    base_path = 'D:\\study\\datasets\\CD_datasets'
-    train_root = os.path.join(base_path, dataset_name, 'train\\')
-    val_root = os.path.join(base_path, dataset_name, 'val\\')
+    #TODO：修改为相对路径需要
+    # base_path = 'D:\\study\\datasets\\CD_datasets'
+    # train_root = os.path.join(base_path, dataset_name, 'train\\')
+    # val_root = os.path.join(base_path, dataset_name, 'val\\')
+    # 获取当前项目根目录（假设你在项目根目录下运行脚本）
+    base_path = Path('../datasets')  # 或 Path.cwd() / 'datasets' / 'CD_datasets'
+    train_root = base_path / dataset_name / 'train'
+    val_root = base_path / dataset_name / 'val'
 
     train_loader = data_loader.get_loader(train_root, ph.batch_size, ph.patch_size, num_workers=2, shuffle=True,
                                           pin_memory=True)
@@ -162,7 +153,7 @@ def train_net(dataset_name):
     # 5. Begin training
     # 比如说ph.epochs设置成250的话,epoch【0,249】
     for epoch in range(ph.epochs):
-        print(f"Epoch {epoch} started")  # 添加调试输出
+        print(f" ********************* Epoch {epoch} 开始 ********************* ")  # 添加调试输出
         start_time = time.time()
         # 打印当前学习率（因为学习率会变化）。
         for param_group in optimizer.param_groups:
@@ -179,7 +170,7 @@ def train_net(dataset_name):
 
         # 当前epoch执行所使用的时间
         epoch_time = time.time() - start_time
-        print(f"Epoch {epoch} 耗时: {epoch_time:.2f}秒")
+        print(f" ********************* Epoch {epoch} 结束: {epoch_time:.2f}秒 ********************* ")
 
 
 if __name__ == '__main__':

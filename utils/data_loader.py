@@ -5,6 +5,7 @@ import torchvision.transforms as transforms
 import numpy as np
 import random
 from PIL import ImageEnhance
+from pathlib import Path
 
 
 def cv_random_flip(img_A, img_B, label):
@@ -101,13 +102,17 @@ class ChangeDataset(data.Dataset):
     def __init__(self, root, trainsize, mosaic_ratio=0.75):
         self.trainsize = trainsize
         # get filenames
-        self.image_root_A =  root + 't1/'
-        self.image_root_B =  root + 't2/'
-        self.gt_root = root + 'label/'
+        # self.image_root_A =  root + 't1/'
+        # self.image_root_B =  root + 't2/'
+        # self.gt_root = root + 'label/'
+        root = Path(root)
+        self.image_root_A = root / 't1'
+        self.image_root_B = root / 't2'
+        self.gt_root = root / 'label'
         self.mosaic_ratio = mosaic_ratio
-        self.images_A = [self.image_root_A + f for f in os.listdir(self.image_root_A) if f.endswith('.jpg') or f.endswith('.png')]
-        self.images_B = [self.image_root_B + f for f in os.listdir(self.image_root_B) if f.endswith('.jpg') or f.endswith('.png')]
-        self.gts = [self.gt_root + f for f in os.listdir(self.gt_root) if f.endswith('.jpg')
+        self.images_A = [self.image_root_A / f for f in os.listdir(self.image_root_A) if f.endswith('.jpg') or f.endswith('.png')]
+        self.images_B = [self.image_root_B / f for f in os.listdir(self.image_root_B) if f.endswith('.jpg') or f.endswith('.png')]
+        self.gts = [self.gt_root / f for f in os.listdir(self.gt_root) if f.endswith('.jpg')
                     or f.endswith('.png')]
         self.images_A = sorted(self.images_A)
         self.images_B = sorted(self.images_B)
@@ -144,8 +149,8 @@ class ChangeDataset(data.Dataset):
         image_A = self.img_transform(image_A)
         image_B = self.img_transform(image_B)# (3,h,w)
         gt = self.gt_transform(gt) #(1,h,w)
-        file_name = self.images_A[index].split('/')[-1][:-len(".png")]
-
+        # file_name = self.images_A[index].split('/')[-1][:-len(".png")]
+        file_name = self.images_A[index].stem  # 自动去掉扩展名
         return image_A, image_B, gt,file_name
 
 
@@ -253,12 +258,14 @@ class Test_ChangeDataset(data.Dataset):
         # image_root_A =  root + 't1/'
         # image_root_B =  root + 't2/'
         # gt_root = root + 'label/'
-        image_root_A = os.path.join(root, 't1\\')
-        image_root_B = os.path.join(root, 't2\\')
-        gt_root = os.path.join(root, 'label\\')
-        self.images_A = [image_root_A + f for f in os.listdir(image_root_A) if f.endswith('.jpg') or f.endswith('.png')]
-        self.images_B = [image_root_B + f for f in os.listdir(image_root_B) if f.endswith('.jpg') or f.endswith('.png')]
-        self.gts = [gt_root + f for f in os.listdir(gt_root) if f.endswith('.jpg')
+        root = Path(root)
+        self.image_root_A = root / 't1'
+        self.image_root_B = root / 't2'
+        self.gt_root = root / 'label'
+
+        self.images_A = [self.image_root_A / f for f in os.listdir(self.image_root_A) if f.endswith('.jpg') or f.endswith('.png')]
+        self.images_B = [self.image_root_B / f for f in os.listdir(self.image_root_B) if f.endswith('.jpg') or f.endswith('.png')]
+        self.gts = [self.gt_root / f for f in os.listdir(self.gt_root) if f.endswith('.jpg')
                     or f.endswith('.png')]
         self.images_A = sorted(self.images_A)
         self.images_B = sorted(self.images_B)
@@ -285,7 +292,8 @@ class Test_ChangeDataset(data.Dataset):
         image_A = self.img_transform(image_A)
         image_B = self.img_transform(image_B)
         gt = self.gt_transform(gt)
-        file_name = self.images_A[index].split('/')[-1][:-len(".png")]
+        # file_name = self.images_A[index].split('/')[-1][:-len(".png")]
+        file_name = self.images_A[index].stem  # 自动去掉扩展名
 
         return image_A, image_B, gt, file_name
 
