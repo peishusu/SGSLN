@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="inference文件修改,删除日志部分">
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="iou计算标准修改">
+      <change afterPath="$PROJECT_DIR$/models/HSANet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/data_loader.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/metrics.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/visualization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,11 +47,11 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Python.train.executor&quot;: &quot;Coverage&quot;,
+    &quot;Python.train.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/study/research/HSANet&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/study/research/Exchanging Dual Encoder-Decoder A New/SGSLN/utils&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -58,6 +64,7 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\utils" />
+      <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\models" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\科研\深度学习\dpcd\idea1合集\idea1\dpcd" />
@@ -116,9 +123,6 @@
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -283,7 +287,13 @@
       <workItem from="1746707427284" duration="594000" />
       <workItem from="1746751930406" duration="1061000" />
       <workItem from="1746877999359" duration="7583000" />
-      <workItem from="1746926457721" duration="4667000" />
+      <workItem from="1746926457721" duration="9532000" />
+      <workItem from="1747482590968" duration="1915000" />
+      <workItem from="1747556874199" duration="1220000" />
+      <workItem from="1748133666256" duration="602000" />
+      <workItem from="1748172168060" duration="1369000" />
+      <workItem from="1748656671089" duration="16031000" />
+      <workItem from="1748672861522" duration="1148000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -445,7 +455,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746412965194</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="iou计算标准修改">
+      <option name="closed" value="true" />
+      <created>1746933366016</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1746933366016</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -476,17 +494,45 @@
     <MESSAGE value="过拟合问题 调参" />
     <MESSAGE value="添加iou指标" />
     <MESSAGE value="inference文件修改,删除日志部分" />
-    <option name="LAST_COMMIT_MESSAGE" value="inference文件修改,删除日志部分" />
+    <MESSAGE value="iou计算标准修改" />
+    <option name="LAST_COMMIT_MESSAGE" value="iou计算标准修改" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utils/data_loading.py</url>
+          <line>140</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train.py</url>
-          <line>210</line>
-          <option name="timeStamp" value="20" />
+          <line>170</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/train.py</url>
+          <line>174</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utils/utils.py</url>
+          <line>95</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utils/utils.py</url>
+          <line>164</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -497,7 +543,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$predict.coverage" NAME="predict 覆盖结果" MODIFIED="1652280887913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$train.coverage" NAME="train 覆盖结果" MODIFIED="1653820955995" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1746020222281" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1748671635160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/dpcd_model_py$main.coverage" NAME="main 覆盖结果" MODIFIED="1660901820212" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/offical_SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1744619614082" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$calculate_video_memory.coverage" NAME="calculate_video_memory 覆盖结果" MODIFIED="1651594325813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

@@ -4,13 +4,12 @@ import time
 import ipdb
 import numpy as np
 from torch import optim
+import torch.nn as nn
 import torchvision.transforms as T
-from torch.utils.data import DataLoader
-from utils.data_loading import BasicDataset
+
 from utils.path_hyperparameter import ph
 import torch
-# from utils.losses import FCCDN_loss_without_seg
-from utils.losses_new import FCCDN_loss_without_seg
+from utils import data_loader
 
 import os
 import logging
@@ -18,15 +17,12 @@ import random
 import wandb
 # from models.Models import DPCD
 from models.Models_trans import DPCD
+from models.HSANet import HSANet
 
 from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score,JaccardIndex
-from utils.utils import train_val
-from utils.dataset_process import compute_mean_std
-from utils.dataset_process import image_shuffle, split_image
-import onnx
-import onnx.utils
-import onnx.version_converter
-import netron
+from utils.utils import train,val
+from utils.metrics import Evaluator
+
 from torch.utils.data import DataLoader # 继承 dataloader
 from prefetch_generator import BackgroundGenerator
 
@@ -86,38 +82,35 @@ def train_net(dataset_name):
         return nothing
     """
     # 1. Create dataset, checkpoint and best model path
-
     # 分别计算 t1文件中所有图像的均值、标准差
-    t1_mean, t1_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t1/')
-    t2_mean, t2_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t2/')
+    # t1_mean, t1_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t1/')
+    # t2_mean, t2_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t2/')
+    #
+    #
+    # dataset_args = dict(t1_mean=t1_mean, t1_std=t1_std, t2_mean=t2_mean, t2_std=t2_std)
+    #
+    # train_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/train/t1/',
+    #                              t2_images_dir=f'../datasets/{dataset_name}/train/t2/',
+    #                              labels_dir=f'../datasets/{dataset_name}/train/label/',
+    #                              train=True, **dataset_args)
+    # val_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/val/t1/',
+    #                            t2_images_dir=f'../datasets/{dataset_name}/val/t2/',
+    #                            labels_dir=f'../datasets/{dataset_name}/val/label/',
+    #                            train=False, **dataset_args)
+    dataset_name = ph.dataset_name
+    # 使用自定义的 data_loader 模块加载训练/验证数据，返回 DataLoader 实例，供训练使用。
+    base_path = 'D:\\study\\datasets\\CD_datasets'
+    train_root = os.path.join(base_path, dataset_name, 'train\\')
+    val_root = os.path.join(base_path, dataset_name, 'val\\')
 
+    train_loader = data_loader.get_loader(train_root, ph.batch_size, ph.patch_size, num_workers=2, shuffle=True,
+                                          pin_memory=True)
+    val_loader = data_loader.get_test_loader(val_root, ph.batch_size, ph.patch_size, num_workers=2, shuffle=False,
+                                             pin_memory=True)
 
-    dataset_args = dict(t1_mean=t1_mean, t1_std=t1_std, t2_mean=t2_mean, t2_std=t2_std)
-
-    train_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/train/t1/',
-                                 t2_images_dir=f'../datasets/{dataset_name}/train/t2/',
-                                 labels_dir=f'../datasets/{dataset_name}/train/label/',
-                                 train=True, **dataset_args)
-    val_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/val/t1/',
-                               t2_images_dir=f'../datasets/{dataset_name}/val/t2/',
-                               labels_dir=f'../datasets/{dataset_name}/val/label/',
-                               train=False, **dataset_args)
-
-    # 2. 通过调用 BasicDataset 类中的 __len__() 方法来获取数据集的大小，即训练集和验证集的样本数量。
-    # train_dataset 和 val_dataset 作为 BasicDataset 类的实例，调用 len() 函数时会自动触发 __len__() 方法
-    n_train = len(train_dataset)
-    n_val = len(val_dataset)
-
-    # 3. Create data loaders
-
-    loader_args = dict(num_workers=8,  # 使用8个子进程并行加载数据
-                       prefetch_factor=5, # 每个worker预加载5个batch
-                       persistent_workers=True,  # 训练过程中保持Worker进程存活（默认每个epoch后销毁重建），避免重复创建进程的开销。
-                       # pin_memeory=True,
-                       )
-    # shuffle=True 表示个epoch打乱数据顺序，防止模型记忆样本顺序；drop_last=False 不丢弃最后一个不完整的batch；
-    train_loader = DataLoaderX(train_dataset, shuffle=True, drop_last=False, batch_size=ph.batch_size, **loader_args)
-    val_loader = DataLoaderX(val_dataset, shuffle=False, drop_last=False, batch_size=ph.batch_size * ph.inference_ratio, **loader_args)
+    # 初始化两个评估器，用于训练与验证阶段评估模型性能（比如 IoU、Precision、Recall 等）。
+    Eva_train = Evaluator(num_class=2)
+    Eva_val = Evaluator(num_class=2)
 
     # 4. Initialize logging
     # 自动检测可用硬件，优先使用GPU（CUDA），否则回退到CPU。
@@ -127,113 +120,66 @@ def train_net(dataset_name):
     localtime = time.asctime(time.localtime(time.time()))
     hyperparameter_dict = ph.state_dict()
     hyperparameter_dict['time'] = localtime
-    # using wandb to log hyperparameter, metrics and output
-    # resume=allow means if the id is identical with the previous one, the run will resume
-    # (anonymous=must) means the id will be anonymous
-    log_wandb = wandb.init(project=ph.log_wandb_project, resume='allow', anonymous='must',
-                           settings=wandb.Settings(start_method='thread'),
-                           config=hyperparameter_dict)
-    logging.info(f'''Starting training:
-        Epochs:          {ph.epochs}
-        Batch size:      {ph.batch_size}
-        Learning rate:   {ph.learning_rate}
-        Training size:   {n_train}
-        Validation size: {n_val}
-        Checkpoints:     {ph.save_checkpoint}
-        save best model: {ph.save_best_model}
-        Device:          {device.type}
-        Mixed Precision: {ph.amp}
-    ''')
+
+
 
     # 5. Set up model, optimizer, warm_up_scheduler, learning rate scheduler, loss function and other things
 
-    net = DPCD()  # change detection model
+
+    # net = DPCD()  # change detection model
+    net = HSANet().cuda() # chaneg cd model
+
+    # 原始的损失函数
+    # criterion = FCCDN_loss_without_seg  # loss function 定义的一个损失函数
+    # 使用 二分类的带 Logits 的交叉熵损失，适合输出未经过 Sigmoid 的二分类输出。
+    criterion = nn.BCEWithLogitsLoss().cuda()
+
     # 将模型 net 移动到指定的设备 device 上，例如如果 device 是 "cuda"，它会将模型移动到 GPU 上，如果是 "cpu"，则模型会在 CPU 上运行。
     net = net.to(device=device)
     # 码创建了一个优化器 optimizer，使用的是 AdamW 优化算法，它是一种常用的基于梯度的优化器
     optimizer = optim.AdamW(net.parameters(), lr=ph.learning_rate,
                             weight_decay=ph.weight_decay)  # optimizer
-    # 用于生成一个学习率预热（warm-up）数组，主要目的是在训练开始时逐步增大学习率，避免初期训练时学习率过高导致的训练不稳定。
-    warmup_lr = np.arange(1e-7, ph.learning_rate,
-                          (ph.learning_rate - 1e-7) / ph.warm_up_step)  # warm up learning rate
-    # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=ph.patience,factor=ph.factor)  # learning rate scheduler
-    #是用于启用自动混合精度（AMP）训练的梯度缩放器。AMP 是 PyTorch 提供的一种加速训练的技术，通过使用半精度（16位）浮点数来减少内存使用并加速训练。为了保持训练的稳定性，需要对梯度进行缩放。
-    grad_scaler = torch.cuda.amp.GradScaler()  # loss scaling for amp
 
-    # load model and optimizer
-    # 主要用于加载预训练模型的权重，并恢复模型的优化器状态
-    if ph.load:
-        # 加载存储的模型检查点（checkpoint），并将其存储到 checkpoint 变量中
-        checkpoint = torch.load(ph.load, map_location=device)
-        net.load_state_dict(checkpoint['net'])
-        logging.info(f'Model loaded from {ph.load}')
-        if 'optimizer' in checkpoint.keys():
-            optimizer.load_state_dict(checkpoint['optimizer'])
-            for g in optimizer.param_groups:
-                g['lr'] = ph.learning_rate
-            optimizer.param_groups[0]['capturable'] = True
-
-
-    total_step = 0  # logging step
-    lr = ph.learning_rate  # learning rate 学习率
-
-
-    criterion = FCCDN_loss_without_seg  # loss function 定义的一个损失函数
-
-    # 初始化用于模型评估的最佳指标和计算指标的集合，这里['best_f1score', 'lowest loss'] 是字典的键，0 是每个键的默认值。
-    best_metrics = dict.fromkeys(['best_f1score','best_precision','best_recall','best_IoU'], 0)  # best evaluation metrics
-    # 一个用来组织和计算多种评估指标的工具。在 PyTorch 中，MetricCollection 是一种便捷方式，它允许我们在训练过程中同时计算多个不同的评估指标。
-    metric_collection = MetricCollection({
-        'accuracy': Accuracy().to(device=device),
-        'precision': Precision().to(device=device),
-        'recall': Recall().to(device=device),
-        'f1score': F1Score().to(device=device),
-        'IoU': JaccardIndex(num_classes=2, task="binary").to(device=device)
-
-    })  # metrics calculator
-
-    #  PyTorch 中的一个工具函数，它将 PyTorch Tensor 转换为 PIL 图像对象。PIL 图像是 Python Imaging Library（或 Pillow）使用的一种图像格式，可以用于显示或保存图像
-    to_pilimg = T.ToPILImage()  # convert to PIL image to log in wandb
+    # CosineAnnealingWarmRestarts: 余弦退火策略 + 周期性重启，有利于模型更好收敛。
+    lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=15, T_mult=2)
 
     # model saved path
     # 创建了模型保存的路径，用于存储模型的训练检查点和最佳模型
-    checkpoint_path = f'./{dataset_name}_checkpoint/'
-    best_model_path = f'./{dataset_name}_best_model/'
-    best_loss_model_path = f'./{dataset_name}_best_loss_model/'
+    save_path = ph.save_path + dataset_name
+    if not os.path.exists(ph.save_path):
+        os.makedirs(ph.save_path)
 
-    # 用于跟踪连续多少个 epoch 中模型的性能（例如，F1 分数或损失）没有改善。如果模型在一定的 patience 轮次内没有提升（即 F1 分数没有变好或损失没有降低），可以采取一些操作，比如降低学习率或提前停止训练。
-    non_improved_epoch = 0  # adjust learning rate when non_improved_epoch equal to patience
 
+    print(f'''Starting training:
+        Epochs:          {ph.epochs}
+        Batch size:      {ph.batch_size}
+        Learning rate:   {ph.learning_rate}
+        Checkpoints:     {ph.save_checkpoint}
+        save best model: {ph.save_best_model}
+        Device:          {device.type}
+    ''')
+    best_iou = 0.0
     # 5. Begin training
     # 比如说ph.epochs设置成250的话,epoch【0,249】
     for epoch in range(ph.epochs):
-        # 输出后的内容
-        log_wandb, net, optimizer, grad_scaler, total_step, lr = \
-            train_val(
-                mode='train', dataset_name=dataset_name,
-                dataloader=train_loader, device=device, log_wandb=log_wandb, net=net,
-                optimizer=optimizer, total_step=total_step, lr=lr, criterion=criterion,
-                metric_collection=metric_collection, to_pilimg=to_pilimg, epoch=epoch,
-                warmup_lr=warmup_lr, grad_scaler=grad_scaler
-            )
+        print(f"Epoch {epoch} started")  # 添加调试输出
+        start_time = time.time()
+        # 打印当前学习率（因为学习率会变化）。
+        for param_group in optimizer.param_groups:
+            print(f"Epoch {epoch} learning rate : {param_group['lr']}")
+        Eva_train.reset()
+        train(train_loader, Eva_train, dataset_name, net, criterion, optimizer,epoch)
         # 6. Begin evaluation
-
-        # starting validation from evaluate epoch to minimize time
-        # 验证过程（只有当 epoch 达到指定数量后才执行），前几轮训练模型还不稳定，为了节省时间，不做验证。
         if epoch >= ph.evaluate_epoch:
-            with torch.no_grad():
-                log_wandb, net, optimizer, total_step, lr, best_metrics, non_improved_epoch = \
-                    train_val(
-                        mode='val', dataset_name=dataset_name,
-                        dataloader=val_loader, device=device, log_wandb=log_wandb, net=net,
-                        optimizer=optimizer, total_step=total_step, lr=lr, criterion=criterion,
-                        metric_collection=metric_collection, to_pilimg=to_pilimg, epoch=epoch,
-                        best_metrics=best_metrics, checkpoint_path=checkpoint_path,
-                        best_model_path=best_model_path, best_loss_model_path=best_loss_model_path,
-                        non_improved_epoch=non_improved_epoch
-                    )
-    # 放在整个训练结束后
-    wandb.finish()
+
+            best_iou = val(val_loader, Eva_val, dataset_name, save_path, net, epoch,best_iou)
+
+        # 更新学习率（执行调度器）
+        lr_scheduler.step()
+
+        # 当前epoch执行所使用的时间
+        epoch_time = time.time() - start_time
+        print(f"Epoch {epoch} 耗时: {epoch_time:.2f}秒")
 
 
 if __name__ == '__main__':

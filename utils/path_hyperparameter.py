@@ -1,18 +1,18 @@
 class Path_Hyperparameter:
     random_seed = 42
-
+    save_path = './output/'
     # dataset hyper-parameter
-    dataset_name = 'CLCD'
+    dataset_name = 'test_cd'
 
     # training hyper-parameter
     epochs: int = 220  # Number of epochs
     batch_size: int = 1  # Batch size
     inference_ratio = 1  # batch_size in val and test equal to batch_size*inference_ratio
-    learning_rate: float = 2e-4  # Learning rate
+    learning_rate: float = 5e-4  # Learning rate
     factor = 0.1  # learning rate decreasing factor
     patience = 10  # schedular patience
     warm_up_step = 500  # warm up step
-    weight_decay: float = 2e-3  # AdamW optimizer weight decay
+    weight_decay: float = 0.0025  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not
     load: str = False
     # 用于测试已经训练好的 模型
@@ -20,7 +20,7 @@ class Path_Hyperparameter:
     max_norm: float = 20  # gradient clip max norm
 
     # evaluate hyper-parameter
-    evaluate_epoch: int = 180  # start evaluate after training for evaluate epochs
+    evaluate_epoch: int = 0  # start evaluate after training for evaluate epochs
     stage_epoch = [0, 0, 0, 0, 0]  # adjust learning rate after every stage epoch
     save_checkpoint: bool = True  # if save checkpoint of model or not
     save_interval: int = 10  # save checkpoint every interval epoch
