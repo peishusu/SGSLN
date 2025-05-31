@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="iou计算标准修改">
-      <change afterPath="$PROJECT_DIR$/models/HSANet.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/data_loader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/metrics.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/visualization.py" afterDir="false" />
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="框架模板调整--相对路径调整">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,7 +287,7 @@
       <workItem from="1748133666256" duration="602000" />
       <workItem from="1748172168060" duration="1369000" />
       <workItem from="1748656671089" duration="16031000" />
-      <workItem from="1748672861522" duration="1148000" />
+      <workItem from="1748672861522" duration="6093000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -463,7 +457,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746933366016</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="框架模板调整--不再使用WANDB">
+      <option name="closed" value="true" />
+      <created>1748674032676</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1748674032676</updated>
+    </task>
+    <task id="LOCAL-00023" summary="框架模板调整--相对路径调整">
+      <option name="closed" value="true" />
+      <created>1748686340033</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1748686340033</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -495,7 +505,9 @@
     <MESSAGE value="添加iou指标" />
     <MESSAGE value="inference文件修改,删除日志部分" />
     <MESSAGE value="iou计算标准修改" />
-    <option name="LAST_COMMIT_MESSAGE" value="iou计算标准修改" />
+    <MESSAGE value="框架模板调整--不再使用WANDB" />
+    <MESSAGE value="框架模板调整--相对路径调整" />
+    <option name="LAST_COMMIT_MESSAGE" value="框架模板调整--相对路径调整" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -506,16 +518,6 @@
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/train.py</url>
-          <line>170</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/train.py</url>
-          <line>174</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/utils.py</url>
           <line>95</line>
           <option name="timeStamp" value="8" />
@@ -524,6 +526,11 @@
           <url>file://$PROJECT_DIR$/utils/utils.py</url>
           <line>164</line>
           <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/train.py</url>
+          <line>96</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
