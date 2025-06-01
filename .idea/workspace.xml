@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="框架模板调整--相对路径调整">
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="env更新">
+      <change afterPath="$PROJECT_DIR$/models/CDXLSTM/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/CDXLSTM/vision_lstm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/CDXLSTM/vision_lstm_util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/xformer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
@@ -39,33 +43,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.train.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/study/research/Exchanging Dual Encoder-Decoder A New/SGSLN/utils&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.train.executor": "Run",
+    "Python.xformer.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/study/research/Exchanging Dual Encoder-Decoder A New/SGSLN/models/CDXLSTM",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\utils" />
+      <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\models\CDXLSTM" />
       <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\models" />
+      <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\utils" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\科研\深度学习\dpcd\idea1合集\idea1\dpcd" />
       <recent name="F:\科研\深度学习\dpcd\idea1合集\idea1\dpcd\utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.train">
+  <component name="RunManager" selected="Python.xformer">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="idea2" />
       <option name="ENV_FILES" value="" />
@@ -117,6 +123,9 @@
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -132,8 +141,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="xformer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="idea1" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/xformer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.xformer" />
         <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
@@ -287,7 +317,9 @@
       <workItem from="1748133666256" duration="602000" />
       <workItem from="1748172168060" duration="1369000" />
       <workItem from="1748656671089" duration="16031000" />
-      <workItem from="1748672861522" duration="6093000" />
+      <workItem from="1748672861522" duration="8611000" />
+      <workItem from="1748744609067" duration="2402000" />
+      <workItem from="1748751105763" duration="1017000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -473,7 +505,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748686340033</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="env更新">
+      <option name="closed" value="true" />
+      <created>1748689458849</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1748689458849</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -507,7 +547,8 @@
     <MESSAGE value="iou计算标准修改" />
     <MESSAGE value="框架模板调整--不再使用WANDB" />
     <MESSAGE value="框架模板调整--相对路径调整" />
-    <option name="LAST_COMMIT_MESSAGE" value="框架模板调整--相对路径调整" />
+    <MESSAGE value="env更新" />
+    <option name="LAST_COMMIT_MESSAGE" value="env更新" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -531,6 +572,21 @@
           <url>file://$PROJECT_DIR$/train.py</url>
           <line>96</line>
           <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/xformer.py</url>
+          <line>59</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/xformer.py</url>
+          <line>245</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/xformer.py</url>
+          <line>250</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
