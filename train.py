@@ -84,12 +84,7 @@ def train_net(dataset_name):
     """
 
     dataset_name = ph.dataset_name
-    # 使用自定义的 data_loader 模块加载训练/验证数据，返回 DataLoader 实例，供训练使用。
-    #TODO：修改为相对路径需要
-    # base_path = 'D:\\study\\datasets\\CD_datasets'
-    # train_root = os.path.join(base_path, dataset_name, 'train\\')
-    # val_root = os.path.join(base_path, dataset_name, 'val\\')
-    # 获取当前项目根目录（假设你在项目根目录下运行脚本）
+
     base_path = Path('../datasets')  # 或 Path.cwd() / 'datasets' / 'CD_datasets'
     train_root = base_path / dataset_name / 'train'
     val_root = base_path / dataset_name / 'val'
@@ -115,8 +110,6 @@ def train_net(dataset_name):
 
 
     # 5. Set up model, optimizer, warm_up_scheduler, learning rate scheduler, loss function and other things
-
-
     # net = DPCD()  # change detection model
     net = HSANet().cuda() # chaneg cd model
 
@@ -153,6 +146,7 @@ def train_net(dataset_name):
     # 5. Begin training
     # 比如说ph.epochs设置成250的话,epoch【0,249】
     for epoch in range(ph.epochs):
+        print("/n")
         print(f" ********************* Epoch {epoch} 开始 ********************* ")  # 添加调试输出
         start_time = time.time()
         # 打印当前学习率（因为学习率会变化）。
@@ -171,7 +165,7 @@ def train_net(dataset_name):
         # 当前epoch执行所使用的时间
         epoch_time = time.time() - start_time
         print(f" ********************* Epoch {epoch} 结束: {epoch_time:.2f}秒 ********************* ")
-
+        print("/n")
 
 if __name__ == '__main__':
     # 程序执行入口
