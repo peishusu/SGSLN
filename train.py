@@ -17,7 +17,7 @@ import logging
 import random
 import wandb
 # from models.Models import DPCD
-from models.Models_trans import DPCD
+from models.Models_trans import DPCD # 这个model废弃了主要是
 from models.HSANet import HSANet
 
 from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score,JaccardIndex
@@ -84,7 +84,7 @@ def train_net(dataset_name):
     """
 
     dataset_name = ph.dataset_name
-
+    # 这一块关于dataset的路径配置采用了相对路径，更加好用
     base_path = Path('../datasets')  # 或 Path.cwd() / 'datasets' / 'CD_datasets'
     train_root = base_path / dataset_name / 'train'
     val_root = base_path / dataset_name / 'val'

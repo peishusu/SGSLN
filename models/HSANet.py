@@ -162,7 +162,7 @@ class HSANet(nn.Module):
         super(HSANet, self).__init__()
         # vgg16_bn = models.vgg16_bn(pretrained=True)
         vgg16_bn = models.vgg16_bn(weights=VGG16_BN_Weights.IMAGENET1K_V1) # 新版本
-        self.inc = vgg16_bn.features[:5]  # 64
+        self.inc = vgg16_bn.features[:5]  # 通道数从 3 - >  64
         self.down1 = vgg16_bn.features[5:12]  # 128
         self.down2 = vgg16_bn.features[12:22]  # 256
         self.down3 = vgg16_bn.features[22:32]  # 512

@@ -253,8 +253,11 @@ class SKmLSTMLayer(nn.Module):
         h_concat = torch.stack([h_lstm, h_m, h_skip], dim=1)  # [B, 3, T, H]
 
         # 全局注意力权重
-        gap = h_concat.mean(dim=2).mean(dim=-1)  # [B, 3]
-        gap_flat = torch.cat([gap[:, i] for i in range(3)], dim=-1)  # [B, 3H]
+        # gap = h_concat.mean(dim=2).mean(dim=-1)  # [B, 3]
+        gap = h_concat.mean(dim=2)  # ✅ 正确：只对时间维度做 GAP，结果是 [B, 3, HIDDEN_DIM]
+        gap_flat = gap.reshape(B, -1)  # 得到 [B, 3 * HIDDEN_DIM]
+
+        # gap_flat = torch.cat([gap[:, i] for i in range(3)], dim=-1)  # [B, 3H]
         attn = self.fc2(F.relu(self.fc1(gap_flat)))  # [B, 3]
         weights = self.softmax(attn).unsqueeze(-1).unsqueeze(-1)  # [B, 3, 1, 1]
 
@@ -330,8 +333,12 @@ class XLSTM_axial(nn.Module):
         self.convA = nn.Conv2d(in_channel, 1, 1)
         self.convB = nn.Conv2d(in_channel, 1, 1)
         self.sigmoid = nn.Sigmoid()
+        # TODO ：尝试替换一下
         self.xlstm_h = ViLLayer(dim = in_channel)
         self.xlstm_w = ViLLayer(dim = in_channel)
+        # self.xlstm_h = SKmLSTMLayer(dim=in_channel)
+        # self.xlstm_w = SKmLSTMLayer(dim=in_channel)
+        # SKmLSTMLayer
         self.xlstm_conv = conv_1x1(in_channel, in_channel)
         self.pos_emb_h = SqueezeAxialPositionalEmbedding(in_channel, 16)
         self.pos_emb_w = SqueezeAxialPositionalEmbedding(in_channel, 16)
@@ -367,7 +374,12 @@ class XLSTM_atten(nn.Module):
         self.convA = nn.Conv2d(in_channel, 1, 1)
         self.convB = nn.Conv2d(in_channel, 1, 1)
         self.sigmoid = nn.Sigmoid()
+
+        # TODO：测试，我测试一下啊，！！！！ 代替换
         self.xlstm = ViLLayer(dim = in_channel)
+
+        # self.xlstm = SKmLSTMLayer(dim = in_channel)
+
 
     def forward(self, xA, xB):
         x_diff = xA - xB
