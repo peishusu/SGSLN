@@ -27,7 +27,7 @@ class Path_Hyperparameter:
     save_best_model: bool = True  # if save best model or not
 
     # log wandb hyper-parameter
-    log_wandb_project: str = 'change_detection'  # wandb project name
+    # log_wandb_project: str = 'change_detection'  # wandb project name
 
     # data transform hyper-parameter
     noise_p: float = 0.1  # probability of adding noise

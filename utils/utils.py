@@ -150,7 +150,7 @@ def val(val_loader, Eva_val, data_name,save_path, net, epoch,best_iou):
             pred = output.data.cpu().numpy().astype(int)
             target = labels.cpu().numpy().astype(int)
             Eva_val.add_batch(target, pred)
-            #TODO：到时候坑定需要保存这个的
+            #TODO：这一块实际上不需要的，只需要在test过程中进行保存即可
             # if i == sample_batch:
             #     sample_index = np.random.randint(low=0, high=batch_img1.shape[0])
             #     # ipdb.set_trace()

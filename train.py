@@ -17,8 +17,9 @@ import logging
 import random
 import wandb
 # from models.Models import DPCD
-from models.Models_trans import DPCD # 这个model废弃了主要是
-from models.HSANet import HSANet
+# from models.Models_trans import DPCD # 这个model废弃了主要是
+# from models.HSANet import HSANet
+from models.FHLCDNet import FHLCDNet
 
 from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score,JaccardIndex
 from utils.utils import train,val
@@ -111,7 +112,7 @@ def train_net(dataset_name):
 
     # 5. Set up model, optimizer, warm_up_scheduler, learning rate scheduler, loss function and other things
     # net = DPCD()  # change detection model
-    net = HSANet().cuda() # chaneg cd model
+    net = FHLCDNet().cuda() # chaneg cd model
 
     # 原始的损失函数
     # criterion = FCCDN_loss_without_seg  # loss function 定义的一个损失函数

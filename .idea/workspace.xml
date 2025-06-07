@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="无用的依赖删除">
-      <change afterPath="$PROJECT_DIR$/models/LSTMNet.py" afterDir="false" />
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="尝试替换新的混合lstm模块，调优了下">
+      <change afterPath="$PROJECT_DIR$/models/FHLCDNet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/FHLCDNet_parts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/xformer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/HSANet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/HSANet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/LSTMNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/LSTMNet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,11 +30,17 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../../apps/conda/miniconda/envs/yoloyolo/Lib/functools.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../../apps/conda/miniconda/envs/yoloyolo/Lib/site-packages/torch/nn/modules/activation.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../../apps/conda/miniconda/envs/yoloyolo/Lib/site-packages/torch/nn/modules/container.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../../apps/conda/miniconda/envs/yoloyolo/Lib/site-packages/torch/nn/modules/dropout.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -42,7 +53,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Python.LSTMNet (1).executor": "Run",
+    "Python.FHLCDNet.executor": "Run",
+    "Python.HSANet.executor": "Run",
+    "Python.LSTMNet (1).executor": "Debug",
     "Python.train.executor": "Run",
     "Python.xformer.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -54,7 +67,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Python",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -69,12 +82,55 @@
       <recent name="F:\科研\深度学习\dpcd\idea1合集\idea1\dpcd\utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.LSTMNet (1)">
+  <component name="RunManager">
+    <configuration name="FHLCDNet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="idea1" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/FHLCDNet.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="HSANet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="idea1" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/HSANet.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="LSTMNet (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="idea1" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -184,7 +240,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.FHLCDNet" />
         <item itemvalue="Python.LSTMNet (1)" />
+        <item itemvalue="Python.HSANet" />
         <item itemvalue="Python.LSTMNet" />
         <item itemvalue="Python.train" />
       </list>
@@ -343,7 +401,8 @@
       <workItem from="1748744609067" duration="2402000" />
       <workItem from="1748751105763" duration="1298000" />
       <workItem from="1748827743841" duration="1200000" />
-      <workItem from="1748840029091" duration="7427000" />
+      <workItem from="1748840029091" duration="10517000" />
+      <workItem from="1749046411191" duration="17513000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -553,7 +612,23 @@
       <option name="project" value="LOCAL" />
       <updated>1748828937427</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="加了一些自己的设想">
+      <option name="closed" value="true" />
+      <created>1748860155554</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1748860155554</updated>
+    </task>
+    <task id="LOCAL-00028" summary="尝试替换新的混合lstm模块，调优了下">
+      <option name="closed" value="true" />
+      <created>1748861979999</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1748861979999</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -590,7 +665,9 @@
     <MESSAGE value="env更新" />
     <MESSAGE value="引入CD领域的LSTM算法Net，准备强行融合升级" />
     <MESSAGE value="无用的依赖删除" />
-    <option name="LAST_COMMIT_MESSAGE" value="无用的依赖删除" />
+    <MESSAGE value="加了一些自己的设想" />
+    <MESSAGE value="尝试替换新的混合lstm模块，调优了下" />
+    <option name="LAST_COMMIT_MESSAGE" value="尝试替换新的混合lstm模块，调优了下" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -612,23 +689,58 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train.py</url>
-          <line>91</line>
+          <line>92</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/LSTMNet.py</url>
-          <line>511</line>
+          <line>514</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/LSTMNet.py</url>
-          <line>516</line>
-          <option name="timeStamp" value="16" />
+          <url>file://$PROJECT_DIR$/models/HSANet.py</url>
+          <line>254</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/HSANet.py</url>
+          <line>206</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/HSANet.py</url>
+          <line>239</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/HSANet.py</url>
+          <line>255</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/HSANet.py</url>
+          <line>256</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/LSTMNet.py</url>
-          <line>483</line>
-          <option name="timeStamp" value="17" />
+          <line>526</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/LSTMNet.py</url>
+          <line>523</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/FHLCDNet.py</url>
+          <line>115</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/FHLCDNet.py</url>
+          <line>58</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -647,9 +759,12 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$predict.coverage" NAME="predict 覆盖结果" MODIFIED="1652280887913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SGSLN$FHLCDNet.coverage" NAME="FHLCDNet Coverage Results" MODIFIED="1749263842476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$train.coverage" NAME="train 覆盖结果" MODIFIED="1653820955995" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SGSLN$xformer.coverage" NAME="xformer Coverage Results" MODIFIED="1748828647021" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
+    <SUITE FILE_PATH="coverage/SGSLN$HSANet.coverage" NAME="HSANet Coverage Results" MODIFIED="1749138920796" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1748671635160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SGSLN$LSTMNet__1_.coverage" NAME="LSTMNet (1) Coverage Results" MODIFIED="1749140926804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/dpcd_model_py$main.coverage" NAME="main 覆盖结果" MODIFIED="1660901820212" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/offical_SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1744619614082" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$calculate_video_memory.coverage" NAME="calculate_video_memory 覆盖结果" MODIFIED="1651594325813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

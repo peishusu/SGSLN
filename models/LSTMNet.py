@@ -479,8 +479,10 @@ class CDXLSTM(nn.Module):
     def __init__(self, channels=[40, 80, 192, 384]):
         super().__init__()
         self.channels = channels
+        # fusion0 fusion1 对应CSTR模块
         self.fusion0 = XLSTM_axial(channels[0], channels[0])
         self.fusion1 = XLSTM_axial(channels[1], channels[1])
+        # fusion2 fusion3 对应 CTGP模块
         self.fusion2 = XLSTM_atten(channels[2], channels[2])
         self.fusion3 = XLSTM_atten(channels[3], channels[3])
 
@@ -493,25 +495,26 @@ class CDXLSTM(nn.Module):
         self.dwc = dsconv_3x3(channels[0], channels[0])
 
     def forward(self, inputs):
-        featuresA, featuresB = inputs
+        featuresA, featuresB = inputs # 这里面的featuresA, featuresB分别指的是下采样的四个阶段的图片
         # CTSR 模块
-        x_diff_0 = self.fusion0(featuresA[0], featuresB[0]) # [4, 40, 128, 128]
-        x_diff_1 = self.fusion1(featuresA[1], featuresB[1]) # [4, 80, 64, 64]
-        # CTGP模块
-        x_diff_2 = self.fusion2(featuresA[2], featuresB[2]) # [4, 192, 32, 32]
-        x_diff_3 = self.fusion3(featuresA[3], featuresB[3]) # [4, 384, 16, 16]
+        # 第一层、第二层采样的图片进入 CSTR 模块
+        x_diff_0 = self.fusion0(featuresA[0], featuresB[0]) # 输入格式b,128,h/2,w/2 输出格式 b,128,h/2,w/2   fusion0 这个模块不改变b,c,h,w
+        x_diff_1 = self.fusion1(featuresA[1], featuresB[1])  # 输入格式b,256,h/4,w/4 输出格式 b,256,h/4,w/4   fusion1 这个模块不改变b,c,h,w
+        # CTGP模块  第三层、第四层采样的图片进入 CTGP 模块
+        x_diff_2 = self.fusion2(featuresA[2], featuresB[2])  # 输入格式b,512,h/8,w/8 输出格式 b,512,h/8,w/8    fusion2 这个模块不改变b,c,h,w
+        x_diff_3 = self.fusion3(featuresA[3], featuresB[3])# 输入格式b,512,h/16,w/16 输出格式 b,512,h/16,w/16  fusion3 这个模块不改变b,c,h,w
 
-        # CSIF模块
+        # CSIF模块 TODO ：暂时不采用这个模块
         x_h = x_diff_0
-        x_h = self.LHBlock1(x_diff_1, x_h) # [4, 40, 128, 128]
-        x_h = self.LHBlock2(x_diff_2, x_h)
-        x_h = self.LHBlock3(x_diff_3, x_h)
+        x_h = self.LHBlock1(x_diff_1, x_h) # 第一个CSIF模块 输入格式:x_h-> b,128,h/2,w/2  x_diff_1->b,256,h/4,w/4  输出格式:b,128,h/2,w/2
+        x_h = self.LHBlock2(x_diff_2, x_h) # 第二个CSIF模块 输入格式:x_h->b,128,h/2,w/2  x_diff_2 -> b,512,h/8,w/8 输出格式为:b,128,h/2,w/2
+        x_h = self.LHBlock3(x_diff_3, x_h) # 第三个CSIF模块 输入格式:x_h->b,128,h/2,w/2  x_diff_2 -> b,512,h/16,w/16 输出格式为:b,128,h/2,w/2
 
 
         # 最终的head模块
-        out = self.mlp2(self.dwc(x_h) + self.mlp1(x_h))
+        out = self.mlp2(self.dwc(x_h) + self.mlp1(x_h))  # 输入格式为  b,128,h/2,w/2 中间形态 self.dwc(x_h) + self.mlp1(x_h) -> b,128,h/2,w/2 输出格式为:b,2,h/2,w/2
 
-        # 这一块不知道干什么的
+        # 这一块不知道干什么的 out 将
         out = F.interpolate(
             out,
             scale_factor=(4, 4),
@@ -521,11 +524,11 @@ class CDXLSTM(nn.Module):
         return out
     
 if __name__ == '__main__':
-    net = CDXLSTM(channels = [40, 80, 192, 384]).cuda()
-    x = [torch.randn(size=(4,40,128,128)).cuda(),  # b,c,h,w
-         torch.randn(size=(4,80,64,64)).cuda(),
-         torch.randn(size=(4,192,32,32)).cuda(),
-         torch.randn(size=(4,384,16,16)).cuda()]
+    net = CDXLSTM(channels = [128, 256, 512, 512]).cuda()
+    x = [torch.randn(size=(4,128,128,128)).cuda(),  # b,128,h/2,w/2
+         torch.randn(size=(4,256,64,64)).cuda(), # b,256,h/4,w/4
+         torch.randn(size=(4,512,32,32)).cuda(), #b,512,h/8,w/8
+         torch.randn(size=(4,512,16,16)).cuda()] # b,512,h/16/w/16
     print("开始测试了...")
     y = net([x,x])
 
