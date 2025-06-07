@@ -166,7 +166,7 @@ def train_net(dataset_name):
         # 当前epoch执行所使用的时间
         epoch_time = time.time() - start_time
         print(f" ********************* Epoch {epoch} 结束: {epoch_time:.2f}秒 ********************* ")
-        print("/n")
+        print('/n')
 
 if __name__ == '__main__':
     # 程序执行入口

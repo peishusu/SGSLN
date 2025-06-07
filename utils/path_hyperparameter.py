@@ -34,7 +34,7 @@ class Path_Hyperparameter:
 
     # model hyper-parameter
     dropout_p: float = 0.5  # probability of dropout
-    patch_size: int = 512  # size of input image
+    patch_size: int = 256  # size of input image
 
     y = 2  # ECA-net parameter
     b = 1  # ECA-net parameter

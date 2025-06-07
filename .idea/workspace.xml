@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="尝试替换新的混合lstm模块，调优了下">
-      <change afterPath="$PROJECT_DIR$/models/FHLCDNet.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/FHLCDNet_parts.py" afterDir="false" />
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="新的net">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/HSANet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/HSANet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/LSTMNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/LSTMNet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -402,7 +397,7 @@
       <workItem from="1748751105763" duration="1298000" />
       <workItem from="1748827743841" duration="1200000" />
       <workItem from="1748840029091" duration="10517000" />
-      <workItem from="1749046411191" duration="17513000" />
+      <workItem from="1749046411191" duration="18040000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -628,7 +623,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748861979999</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="新的net">
+      <option name="closed" value="true" />
+      <created>1749265900514</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1749265900514</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -667,7 +670,8 @@
     <MESSAGE value="无用的依赖删除" />
     <MESSAGE value="加了一些自己的设想" />
     <MESSAGE value="尝试替换新的混合lstm模块，调优了下" />
-    <option name="LAST_COMMIT_MESSAGE" value="尝试替换新的混合lstm模块，调优了下" />
+    <MESSAGE value="新的net" />
+    <option name="LAST_COMMIT_MESSAGE" value="新的net" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
