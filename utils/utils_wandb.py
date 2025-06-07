@@ -34,7 +34,7 @@ def train_val(
         lr, criterion, metric_collection, to_pilimg, epoch,
         warmup_lr=None, grad_scaler=None,
         best_metrics=None, checkpoint_path=None,
-        best_f1score_model_path=None, best_loss_model_path=None, non_improved_epoch=None
+        best_f1score_model_path=None, non_improved_epoch=None
 ):
     assert mode in ['train', 'val'], 'mode should be train, val'
     epoch_loss = 0
@@ -100,11 +100,8 @@ def train_val(
             t2_img_log = Image.open(list(t2_images_dir.glob(name[sample_index] + '.*'))[0])
             label_log = Image.open(list(labels_dir.glob(name[sample_index] + '.*'))[0])
             pred_log = torch.round(preds[sample_index]).cpu().clone().float()
-            # pred_log[pred_log >= 0.5] = 1
-            # pred_log[pred_log < 0.5] = 0
-            # pred_log = pred_log.float()
 
-        # preds = preds.float()
+
         preds = torch.round(torch.sigmoid(preds)).long() # 转化为0，1的标签
         labels = torch.round(labels).long()
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
@@ -121,22 +118,24 @@ def train_val(
             'epoch': epoch
         })
 
-        # if torch.isnan(loss[0]):
-        #     torch.save(preds, f'pred_{total_step}.pth')
-        #     torch.save(labels, f'label_{total_step}.pth')
-
-        # clear batch variables from memory
         del batch_img1, batch_img2, labels
 
     epoch_metrics = metric_collection.compute()  # compute epoch metric
     epoch_loss /= n_iter
+
+    # 记录各项指标
+    # 替换 IoU 为 f1 / (2 - f1),之前的关于iou的计算是存在问题的
+    f1_score = epoch_metrics['f1score']
+    iou_from_f1 = f1_score / (2 - f1_score) if (2 - f1_score) != 0 else 0.0
+    epoch_metrics['IoU'] = iou_from_f1
     for k in epoch_metrics.keys():
         log_swanlab.log({f'epoch_{mode}_{str(k)}': epoch_metrics[k],
                        'epoch': epoch})  # log epoch metric
-    metric_collection.reset()
+    metric_collection.reset() # 清空所有累积的中间统计量（如TP/FP/TN/FN），为下个epoch做准备。
     log_swanlab.log({f'epoch_{mode}_loss': epoch_loss,
                    'epoch': epoch})  # log epoch loss
 
+    # 记录图片
     log_swanlab.log({
         f'{mode} t1_images': swanlab.Image(t1_img_log),
         f'{mode} t2_images': swanlab.Image(t2_img_log),
@@ -149,15 +148,40 @@ def train_val(
 
     # save best model and adjust learning rate according to learning rate scheduler
     if mode == 'val':
-        if epoch_metrics['f1score'] > best_metrics['best_f1score']:
+        f1_score = epoch_metrics['f1score']
+        iou_from_f1 = f1_score / (2 - f1_score) if (2 - f1_score) != 0 else 0.0
+        epoch_metrics['IoU'] = iou_from_f1
+
+        improved_metrics = 0
+        current_metrics = {
+            'precision': epoch_metrics['precision'],
+            'recall': epoch_metrics['recall'],
+            'f1score': epoch_metrics['f1score'],
+            'IoU': epoch_metrics['IoU']  # 使用新的 IoU
+        }
+
+        for metric_name, current_value in current_metrics.items():
+            best_value = best_metrics.get(f'best_{metric_name}', 0)
+            if current_value > best_value:
+                improved_metrics += 1
+
+        if improved_metrics >= 3:
+            # 更新最佳指标
+            for metric_name, current_value in current_metrics.items():
+                best_metrics[f'best_{metric_name}'] = current_value
+
             non_improved_epoch = 0
-            best_metrics['best_f1score'] = epoch_metrics['f1score']
+
             if ph.save_best_model:
-                save_model(net, best_f1score_model_path, epoch, 'f1score')
-        elif epoch_loss < best_metrics['lowest loss']:
-            best_metrics['lowest loss'] = epoch_loss
-            if ph.save_best_model:
-                save_model(net, best_loss_model_path, epoch, 'loss')
+                save_model(net, best_f1score_model_path, epoch, 'multi_metric')
+
+            # 记录指标到 W&B
+            log_swanlab.log({
+                f'{mode}_{epoch}_best_precision': current_metrics['precision'],
+                f'{mode}_{epoch}_best_recall': current_metrics['recall'],
+                f'{mode}_{epoch}_best_f1score': current_metrics['f1score'],
+                f'{mode}_{epoch}_best_IoU': current_metrics['IoU']
+            })
         else:
             non_improved_epoch += 1
             if non_improved_epoch == ph.patience:
@@ -166,12 +190,13 @@ def train_val(
                     g['lr'] = lr
                 non_improved_epoch = 0
 
-        # save checkpoint every specified interval
+        # save checkpoint every specified interval,推荐每 10 epoch 保存一次，便于中断恢复。(所以：ph.save_intervalv == 10)
         if (epoch + 1) % ph.save_interval == 0 and ph.save_checkpoint:
             save_model(net, checkpoint_path, epoch, 'checkpoint', optimizer=optimizer)
 
+
     if mode == 'train':
-        return log_swanlab, net, optimizer, grad_scaler, total_step, lr
+        return log_swanlab, net, optimizer, grad_scaler, total_step, lr , epoch_loss
     elif mode == 'val':
         return log_swanlab, net, optimizer, total_step, lr, best_metrics, non_improved_epoch
     else:

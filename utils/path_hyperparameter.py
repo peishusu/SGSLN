@@ -4,13 +4,15 @@ class Path_Hyperparameter:
     # dataset hyper-parameter
     dataset_name = 'test_cd'
 
+    early_stop_patience = 10  # 连续多少个 epoch 未提升后早停
+
     # training hyper-parameter
     epochs: int = 100  # Number of epochs
     batch_size: int = 1  # Batch size
     inference_ratio = 1  # batch_size in val and test equal to batch_size*inference_ratio
     learning_rate: float = 5e-4  # Learning rate
     factor = 0.1  # learning rate decreasing factor
-    patience = 12  # schedular patience
+    patience = 10  # schedular patience
     warm_up_step = 500  # warm up step
     weight_decay: float = 0.0025  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not

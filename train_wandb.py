@@ -43,6 +43,31 @@ class DataLoaderX(DataLoader):
         return BackgroundGenerator(super().__iter__())
 
 
+# 基于训练集 loss 的早停策略：
+# 如果 连续 10 个 epoch 的训练 loss 没有下降（或下降不显著），就提前终止训练。
+class EarlyStopping:
+    def __init__(self, patience=10, verbose=True, delta=1e-5):
+        self.patience = patience
+        self.verbose = verbose
+        self.delta = delta
+        self.counter = 0
+        self.best_loss = None
+        self.early_stop = False
+
+    def __call__(self, current_loss):
+        if self.best_loss is None:
+            self.best_loss = current_loss
+        elif current_loss > self.best_loss - self.delta:
+            self.counter += 1
+            if self.verbose:
+                print(f"EarlyStopping counter: {self.counter} / {self.patience}")
+            if self.counter >= self.patience:
+                self.early_stop = True
+        else:
+            self.best_loss = current_loss
+            self.counter = 0
+
+
 def random_seed(SEED):
     random.seed(SEED)
     os.environ['PYTHONHASHSEED'] = str(SEED)
@@ -175,7 +200,7 @@ def train_net(dataset_name):
     # criterion = FCCDN_loss_without_seg  # loss function
     criterion = nn.BCEWithLogitsLoss().cuda()
 
-    best_metrics = dict.fromkeys(['best_f1score', 'lowest loss'], 0)  # best evaluation metrics
+    best_metrics = dict.fromkeys(['best_f1score', 'best_recall','best_precision','best_IoU'], 0)  # best evaluation metrics
     metric_collection = MetricCollection({
         'accuracy': Accuracy(task='binary', mdmc_average='global').to(device=device),
         'precision': Precision(task='binary', mdmc_average='global').to(device=device),
@@ -188,15 +213,18 @@ def train_net(dataset_name):
     # model saved path
     checkpoint_path = f'./{dataset_name}_checkpoint/'
     best_f1score_model_path = f'./{dataset_name}_best_f1score_model/'
-    best_loss_model_path = f'./{dataset_name}_best_loss_model/'
+
 
     non_improved_epoch = 0  # adjust learning rate when non_improved_epoch equal to patience
 
+    early_stopper = EarlyStopping(patience=ph.patience)
+
     # 5. Begin training
+
 
     for epoch in range(ph.epochs):
 
-        log_swanlab, net, optimizer, grad_scaler, total_step, lr = \
+        log_swanlab, net, optimizer, grad_scaler, total_step, lr, train_loss = \
             train_val(
                 mode='train', dataset_name=dataset_name,
                 dataloader=train_loader, device=device, log_swanlab=log_swanlab, net=net,
@@ -204,8 +232,14 @@ def train_net(dataset_name):
                 metric_collection=metric_collection, to_pilimg=to_pilimg, epoch=epoch,
                 warmup_lr=warmup_lr, grad_scaler=grad_scaler
             )
-        # 6. Begin evaluation
 
+        # 判断是否触发早停
+        early_stopper(train_loss)
+        if early_stopper.early_stop:
+            logging.info(f"Early stopping triggered on train loss at epoch {epoch}.")
+            break
+
+        # 6. 开始  val
         # starting validation from evaluate epoch to minimize time
         if epoch >= ph.evaluate_epoch:
             with torch.no_grad():
@@ -216,11 +250,14 @@ def train_net(dataset_name):
                         optimizer=optimizer, total_step=total_step, lr=lr, criterion=criterion,
                         metric_collection=metric_collection, to_pilimg=to_pilimg, epoch=epoch,
                         best_metrics=best_metrics, checkpoint_path=checkpoint_path,
-                        best_f1score_model_path=best_f1score_model_path, best_loss_model_path=best_loss_model_path,
+                        best_f1score_model_path=best_f1score_model_path,
                         non_improved_epoch=non_improved_epoch
                     )
 
     log_swanlab.finish()
+
+
+
 
 
 if __name__ == '__main__':
