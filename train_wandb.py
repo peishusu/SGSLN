@@ -20,7 +20,8 @@ import swanlab
 from models.Models import DPCD
 from models.FHLCDNet import FHLCDNet
 
-from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score
+from torchmetrics import MetricCollection
+from torchmetrics.classification import Accuracy, Precision, Recall, F1Score
 from utils.utils_wandb import train_val
 from utils.dataset_process import compute_mean_std
 
@@ -176,10 +177,10 @@ def train_net(dataset_name):
 
     best_metrics = dict.fromkeys(['best_f1score', 'lowest loss'], 0)  # best evaluation metrics
     metric_collection = MetricCollection({
-        'accuracy': Accuracy(task='binary').to(device=device),
-        'precision': Precision(task='binary').to(device=device),
-        'recall': Recall(task='binary').to(device=device),
-        'f1score': F1Score(task='binary').to(device=device)
+        'accuracy': Accuracy(task='binary', mdmc_average='global').to(device=device),
+        'precision': Precision(task='binary', mdmc_average='global').to(device=device),
+        'recall': Recall(task='binary', mdmc_average='global').to(device=device),
+        'f1score': F1Score(task='binary', mdmc_average='global').to(device=device)
     })  # metrics calculator
 
     to_pilimg = T.ToPILImage()  # convert to PIL image to log in wandb

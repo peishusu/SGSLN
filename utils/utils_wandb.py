@@ -67,6 +67,7 @@ def train_val(
 
         batch_img1 = batch_img1.float().to(device)
         batch_img2 = batch_img2.float().to(device)
+        # labels = labels.float().to(device)
         labels = labels.float().to(device)
 
         if mode == 'train':
@@ -86,8 +87,7 @@ def train_val(
             cd_loss = loss
 
         epoch_loss += cd_loss
-        # preds = torch.sigmoid(preds[0])
-        preds = torch.sigmoid(preds)
+
 
         # log the t1_img, t2_img, pred and label
         if i == sample_batch:
@@ -104,7 +104,9 @@ def train_val(
             # pred_log[pred_log < 0.5] = 0
             # pred_log = pred_log.float()
 
-        preds = preds.float()
+        # preds = preds.float()
+        preds = torch.round(torch.sigmoid(preds)).long() # 转化为0，1的标签
+        labels = torch.round(labels).long()
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
 
         # log loss and metric

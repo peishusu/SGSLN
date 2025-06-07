@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/train_wandb.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="增加swanlab">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/FHLCDNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/FHLCDNet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/data_loading.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/data_loading.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_wandb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -413,6 +408,7 @@
       <workItem from="1748827743841" duration="1200000" />
       <workItem from="1748840029091" duration="10517000" />
       <workItem from="1749046411191" duration="30976000" />
+      <workItem from="1749287494133" duration="2834000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -654,7 +650,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749266425604</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="增加swanlab">
+      <option name="closed" value="true" />
+      <created>1749287531935</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1749287531935</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -694,7 +698,8 @@
     <MESSAGE value="尝试替换新的混合lstm模块，调优了下" />
     <MESSAGE value="新的net" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="增加swanlab" />
+    <option name="LAST_COMMIT_MESSAGE" value="增加swanlab" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -766,17 +771,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train_wandb.py</url>
-          <line>185</line>
+          <line>186</line>
           <option name="timeStamp" value="34" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train_wandb.py</url>
-          <line>210</line>
+          <line>211</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/utils_wandb.py</url>
-          <line>137</line>
+          <line>139</line>
           <option name="timeStamp" value="48" />
         </line-breakpoint>
       </breakpoints>
