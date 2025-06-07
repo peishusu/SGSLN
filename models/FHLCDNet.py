@@ -108,8 +108,8 @@ class FHLCDNet(nn.Module):
         final_map = self.decoder_final(feature2) #输入格式 : B,128,H/2,W/2 输出格式: b,1,h/2,w/2
         final_map = F.interpolate(final_map, size, mode='bilinear', align_corners=True) # 输入格式 : B,1,H/2,W/2 输出格式: b,1,h,w
         # final_map 才是我们需要核心关注的输出
-        return change_map, final_map
-
+        # return change_map, final_map
+        return final_map
 
 if __name__=='__main__':
     #测试热图

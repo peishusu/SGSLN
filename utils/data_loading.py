@@ -137,7 +137,7 @@ class BasicDataset(Dataset):
             label_tensor(tensor): tensor of label.
             name(str): the same name of t1 image, t2 image and label.
         """
-
+        # TODO：从这里进来知道为什么label的格式是 b,h,w
         t1_name = self.t1_ids[idx]
         t2_name = self.t2_ids[idx]
         assert t1_name == t2_name, f't1 name{t1_name} not equal to t2 name{t2_name}'
@@ -169,6 +169,7 @@ class BasicDataset(Dataset):
             if random.choice([0, 1]):
                 t1_img, t2_img = t2_img, t1_img
         sample = self.to_tensor(image=t1_img, image1=t2_img, mask=label)
+        sample['mask'] = sample['mask'].unsqueeze(0)
         # ipdb.set_trace()
         t1_tensor, t2_tensor, label_tensor = sample['image'].contiguous(), \
             sample['image1'].contiguous(), sample['mask'].contiguous()

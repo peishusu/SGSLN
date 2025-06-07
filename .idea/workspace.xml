@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="新的net">
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="fix">
+      <change afterPath="$PROJECT_DIR$/train_wandb.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/FHLCDNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/FHLCDNet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/data_loading.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/data_loading.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,26 +51,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.FHLCDNet.executor": "Run",
-    "Python.HSANet.executor": "Run",
-    "Python.LSTMNet (1).executor": "Debug",
-    "Python.train.executor": "Run",
-    "Python.xformer.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/study/research/Exchanging Dual Encoder-Decoder A New/SGSLN/models/CDXLSTM",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Python",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.FHLCDNet.executor&quot;: &quot;Run&quot;,
+    &quot;Python.HSANet.executor&quot;: &quot;Run&quot;,
+    &quot;Python.LSTMNet (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Python.data_loading.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.train.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_wandb.executor&quot;: &quot;Run&quot;,
+    &quot;Python.utils_wandb.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.xformer.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/study/research/Exchanging Dual Encoder-Decoder A New/SGSLN/models/CDXLSTM&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Python&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\models\CDXLSTM" />
@@ -73,16 +81,20 @@
       <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\utils" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN" />
       <recent name="F:\科研\深度学习\dpcd\idea1合集\idea1\dpcd" />
       <recent name="F:\科研\深度学习\dpcd\idea1合集\idea1\dpcd\utils" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
     <configuration name="FHLCDNet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="idea1" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -103,6 +115,9 @@
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -397,7 +412,7 @@
       <workItem from="1748751105763" duration="1298000" />
       <workItem from="1748827743841" duration="1200000" />
       <workItem from="1748840029091" duration="10517000" />
-      <workItem from="1749046411191" duration="18040000" />
+      <workItem from="1749046411191" duration="30976000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -631,7 +646,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749265900514</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="fix">
+      <option name="closed" value="true" />
+      <created>1749266425604</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1749266425604</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -651,7 +674,6 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="缝代码" />
     <MESSAGE value="缝代码2.0" />
-    <MESSAGE value="fix" />
     <MESSAGE value="inference.py 文件fix" />
     <MESSAGE value="test" />
     <MESSAGE value="图片路径修改" />
@@ -671,16 +693,12 @@
     <MESSAGE value="加了一些自己的设想" />
     <MESSAGE value="尝试替换新的混合lstm模块，调优了下" />
     <MESSAGE value="新的net" />
-    <option name="LAST_COMMIT_MESSAGE" value="新的net" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/utils/data_loading.py</url>
-          <line>140</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/utils.py</url>
           <line>95</line>
@@ -742,9 +760,24 @@
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/FHLCDNet.py</url>
-          <line>58</line>
-          <option name="timeStamp" value="28" />
+          <url>file://$PROJECT_DIR$/utils/utils.py</url>
+          <line>191</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/train_wandb.py</url>
+          <line>185</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/train_wandb.py</url>
+          <line>210</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utils/utils_wandb.py</url>
+          <line>137</line>
+          <option name="timeStamp" value="48" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -762,15 +795,18 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/SGSLN$utils_wandb.coverage" NAME="utils_wandb Coverage Results" MODIFIED="1749278904716" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$predict.coverage" NAME="predict 覆盖结果" MODIFIED="1652280887913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/SGSLN$FHLCDNet.coverage" NAME="FHLCDNet Coverage Results" MODIFIED="1749263842476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$train.coverage" NAME="train 覆盖结果" MODIFIED="1653820955995" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SGSLN$xformer.coverage" NAME="xformer Coverage Results" MODIFIED="1748828647021" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
+    <SUITE FILE_PATH="coverage/SGSLN$data_loading.coverage" NAME="data_loading Coverage Results" MODIFIED="1749277703614" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
+    <SUITE FILE_PATH="coverage/SGSLN$train_wandb.coverage" NAME="train_wandb Coverage Results" MODIFIED="1749286837170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/offical_SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1744619614082" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SGSLN$FHLCDNet.coverage" NAME="FHLCDNet Coverage Results" MODIFIED="1749263842476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/SGSLN$HSANet.coverage" NAME="HSANet Coverage Results" MODIFIED="1749138920796" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1748671635160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SGSLN$LSTMNet__1_.coverage" NAME="LSTMNet (1) Coverage Results" MODIFIED="1749140926804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/dpcd_model_py$main.coverage" NAME="main 覆盖结果" MODIFIED="1660901820212" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/offical_SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1744619614082" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/path_hyperparameter_py$calculate_video_memory.coverage" NAME="calculate_video_memory 覆盖结果" MODIFIED="1651594325813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

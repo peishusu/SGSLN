@@ -173,9 +173,9 @@ def val(val_loader, Eva_val, data_name,save_path, net, epoch,best_iou):
         best_iou = new_iou
         best_epoch = epoch
         best_net = net.state_dict()
-        print('Best Model Iou :%.4f; F1 :%.4f; Best epoch : %d' % (IoU[1], F1[1], best_epoch))
+        print('Best Model Iou :%.4f; F1 :%.4f ; Pre: %.4f;Recall: %.4f;Best epoch : %d' % (IoU[1], F1[1], Pre[1],Recall[1],best_epoch))
         torch.save(best_net, save_path + '_best_iou.pth')
-    print('Best Model Iou :%.4f; F1 :%.4f' % (best_iou, F1[1]))
+    print('Best Model Iou :%.4f' % (best_iou))
     vis.close_summary()
     return best_iou
 
@@ -246,7 +246,7 @@ def train_val(
             Eva_train.add_batch(target, pred)
         else:
             preds = net(batch_img1, batch_img2)
-            loss = criterion(preds, labels)
+            loss = criterion(preds[0], labels) + criterion(preds[1], labels)
             # cd_loss = loss[0]
 
         epoch_loss += loss
