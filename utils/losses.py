@@ -41,7 +41,7 @@ class dice_focal_loss(nn.Module):
     def __call__(self, scores, labels):
         diceloss = self.binnary_dice(torch.sigmoid(scores.clone()), labels)
         foclaloss = self.focal_loss(scores.clone(), labels)
-        return [diceloss, foclaloss]
+        return 0.5 * diceloss + 0.5 * foclaloss
 
 
 def FCCDN_loss_without_seg(scores, labels):
@@ -61,3 +61,28 @@ def FCCDN_loss_without_seg(scores, labels):
 
     loss_change = criterion_change(scores, labels)
     return loss_change
+
+
+
+'''
+下面这个loss func ：主要是为了适配 FHLCDNet搭建的
+'''
+class DiceLoss(nn.Module):
+    def __init__(self, smooth=1):
+        super().__init__()
+        self.smooth = smooth
+
+    def forward(self, inputs, targets):
+        inputs = torch.sigmoid(inputs)  # apply sigmoid if raw logits
+        inputs = inputs.view(-1)
+        targets = targets.view(-1)
+
+        intersection = (inputs * targets).sum()
+        dice = (2. * intersection + self.smooth) / (inputs.sum() + targets.sum() + self.smooth)
+        return 1 - dice
+
+bce_loss = nn.BCEWithLogitsLoss()
+dice_loss = DiceLoss()
+
+def criterion(inputs, targets):
+    return 0.5 * bce_loss(inputs, targets) + 0.5 * dice_loss(inputs, targets)

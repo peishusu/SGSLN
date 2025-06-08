@@ -102,8 +102,8 @@ def train_val(
             pred_log = torch.round(preds[sample_index]).cpu().clone().float()
 
 
-        preds = torch.round(torch.sigmoid(preds)).long() # 转化为0，1的标签
-        labels = torch.round(labels).long()
+        preds = torch.sigmoid(preds).float()
+        labels = labels.int()
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
 
         # log loss and metric
@@ -121,6 +121,7 @@ def train_val(
         del batch_img1, batch_img2, labels
 
     epoch_metrics = metric_collection.compute()  # compute epoch metric
+
     epoch_loss /= n_iter
 
     # 记录各项指标

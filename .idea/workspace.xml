@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="重新构建运行框架，明早重新跑下">
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="模块替换CBAM和skmxlstm">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/FHLCDNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/FHLCDNet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/FHLCDNet_parts.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/FHLCDNet_parts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_wandb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/losses.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/losses.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -407,7 +409,7 @@
       <workItem from="1749046411191" duration="30976000" />
       <workItem from="1749287494133" duration="4545000" />
       <workItem from="1749307501144" duration="2617000" />
-      <workItem from="1749347481736" duration="5791000" />
+      <workItem from="1749347481736" duration="11830000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -673,7 +675,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749310122704</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="模块替换CBAM和skmxlstm">
+      <option name="closed" value="true" />
+      <created>1749353493875</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1749353493875</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -691,7 +701,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="缝代码" />
     <MESSAGE value="缝代码2.0" />
     <MESSAGE value="inference.py 文件fix" />
     <MESSAGE value="test" />
@@ -716,7 +725,8 @@
     <MESSAGE value="增加swanlab" />
     <MESSAGE value="metrics更新" />
     <MESSAGE value="重新构建运行框架，明早重新跑下" />
-    <option name="LAST_COMMIT_MESSAGE" value="重新构建运行框架，明早重新跑下" />
+    <MESSAGE value="模块替换CBAM和skmxlstm" />
+    <option name="LAST_COMMIT_MESSAGE" value="模块替换CBAM和skmxlstm" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -787,18 +797,8 @@
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/train_wandb.py</url>
-          <line>211</line>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/train_wandb.py</url>
-          <line>245</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/utils_wandb.py</url>
-          <line>138</line>
+          <line>139</line>
           <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -829,7 +829,7 @@
     <SUITE FILE_PATH="coverage/SGSLN$data_loading.coverage" NAME="data_loading Coverage Results" MODIFIED="1749277703614" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/SGSLN$train_wandb.coverage" NAME="train_wandb Coverage Results" MODIFIED="1749286837170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/offical_SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1744619614082" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/SGSLN$FHLCDNet.coverage" NAME="FHLCDNet Coverage Results" MODIFIED="1749352023699" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
+    <SUITE FILE_PATH="coverage/SGSLN$FHLCDNet.coverage" NAME="FHLCDNet Coverage Results" MODIFIED="1749353398399" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/SGSLN$HSANet.coverage" NAME="HSANet Coverage Results" MODIFIED="1749138920796" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/SGSLN$train.coverage" NAME="train Coverage Results" MODIFIED="1748671635160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SGSLN$LSTMNet__1_.coverage" NAME="LSTMNet (1) Coverage Results" MODIFIED="1749140926804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
