@@ -156,7 +156,7 @@ def train_val(
         current_f1 = epoch_metrics['f1score']
         best_f1 = best_metrics.get('best_f1score', 0)
 
-        if current_f1 > best_f1:
+        if current_f1 >= best_f1:
             # 更新最佳指标
             best_metrics['best_precision'] = epoch_metrics['precision']
             best_metrics['best_recall'] = epoch_metrics['recall']
@@ -188,8 +188,9 @@ def train_val(
             save_model(net, checkpoint_path, epoch, 'checkpoint', optimizer=optimizer)
 
     if mode == 'train':
-        return log_swanlab, net, optimizer, grad_scaler, total_step, lr , epoch_loss
+        return log_swanlab, net, optimizer, grad_scaler, total_step, lr
     elif mode == 'val':
-        return log_swanlab, net, optimizer, total_step, lr, best_metrics, non_improved_epoch
+        val_f1 = epoch_metrics['f1score'].item()
+        return log_swanlab, net, optimizer, total_step, lr, best_metrics, non_improved_epoch,val_f1
     else:
         raise NameError('mode should be train or val')

@@ -67,6 +67,49 @@ class EarlyStopping:
             self.best_loss = current_loss
             self.counter = 0
 
+# 更推荐基于 验证集指标（如 F1-score） 的标准做法。下面是你代码中兼容的、可直接使用的 基于验证 F1-score 的 EarlyStopping 实现：
+class ValMetricEarlyStopping:
+    def __init__(self, monitor='f1score', mode='max', patience=10, verbose=True, delta=1e-5):
+        """
+        参数：
+        monitor: 要监控的指标名称，建议是你 val 的 metric_collection 中的一个，比如 'f1score'。
+        mode: 'min' 或 'max'，'max' 表示指标越大越好（如 F1-score、Recall），'min' 表示越小越好（如 loss）。
+        patience: 容忍轮数，如果连续这么多轮指标无提升，就停止。
+        delta: 指标提升的最小值，小于这个值视为“无提升”。
+        """
+        self.monitor = monitor
+        self.mode = mode
+        self.patience = patience
+        self.verbose = verbose
+        self.delta = delta
+
+        self.counter = 0
+        self.best_score = None
+        self.early_stop = False
+
+        self.monitor_op = (lambda a, b: a > b + delta) if mode == 'max' else (lambda a, b: a < b - delta)
+
+    def __call__(self, current_score):
+        if self.best_score is None:
+            self.best_score = current_score
+            if self.verbose:
+                print(f"[EarlyStopping] Initial {self.monitor}: {current_score:.6f}")
+        elif self.monitor_op(current_score, self.best_score):
+            self.best_score = current_score
+            self.counter = 0
+            if self.verbose:
+                print(f"[EarlyStopping] {self.monitor} improved to {current_score:.6f}")
+        else:
+            self.counter += 1
+            if self.verbose:
+                print(f"[EarlyStopping] {self.monitor} did not improve. Counter: {self.counter}/{self.patience}")
+            if self.counter >= self.patience:
+                self.early_stop = True
+                if self.verbose:
+                    print(f"[EarlyStopping] Stopping early. Best {self.monitor}: {self.best_score:.6f}")
+
+
+
 
 def random_seed(SEED):
     random.seed(SEED)
@@ -219,14 +262,20 @@ def train_net(dataset_name):
 
     non_improved_epoch = 0  # adjust learning rate when non_improved_epoch equal to patience
 
-    early_stopper = EarlyStopping(patience=ph.patience)
+    # early_stopper = EarlyStopping(patience=ph.patience)
+    early_stopper = ValMetricEarlyStopping(
+        monitor='f1score',  # 也可以是 'IoU'、'accuracy' 等
+        mode='max',
+        patience=ph.patience,  # 来自你的 ph
+        verbose=True
+    )
 
     # 5. Begin training
 
 
     for epoch in range(ph.epochs):
 
-        log_swanlab, net, optimizer, grad_scaler, total_step, lr, train_loss = \
+        log_swanlab, net, optimizer, grad_scaler, total_step, lr = \
             train_val(
                 mode='train', dataset_name=dataset_name,
                 dataloader=train_loader, device=device, log_swanlab=log_swanlab, net=net,
@@ -235,17 +284,11 @@ def train_net(dataset_name):
                 warmup_lr=warmup_lr, grad_scaler=grad_scaler
             )
 
-        # 判断是否触发早停
-        early_stopper(train_loss)
-        if early_stopper.early_stop:
-            logging.info(f"Early stopping triggered on train loss at epoch {epoch}.")
-            break
-
         # 6. 开始  val
         # starting validation from evaluate epoch to minimize time
         if epoch >= ph.evaluate_epoch:
             with torch.no_grad():
-                log_swanlab, net, optimizer, total_step, lr, best_metrics, non_improved_epoch = \
+                log_swanlab, net, optimizer, total_step, lr, best_metrics, non_improved_epoch,val_f1  = \
                     train_val(
                         mode='val', dataset_name=dataset_name,
                         dataloader=val_loader, device=device, log_swanlab=log_swanlab, net=net,
@@ -255,6 +298,11 @@ def train_net(dataset_name):
                         best_f1score_model_path=best_f1score_model_path,
                         non_improved_epoch=non_improved_epoch
                     )
+                early_stopper(val_f1)
+                if early_stopper.early_stop:
+                    logging.info(
+                        f"Early stopping triggered on val f1score at epoch {epoch}. Best f1: {early_stopper.best_score:.4f}")
+                    break
 
     log_swanlab.finish()
 
