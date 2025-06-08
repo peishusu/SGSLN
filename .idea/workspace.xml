@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="模块替换CBAM和skmxlstm">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_wandb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/losses.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/losses.py" afterDir="false" />
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="bug修复">
       <change beforePath="$PROJECT_DIR$/utils/utils_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -409,7 +405,7 @@
       <workItem from="1749046411191" duration="30976000" />
       <workItem from="1749287494133" duration="4545000" />
       <workItem from="1749307501144" duration="2617000" />
-      <workItem from="1749347481736" duration="11830000" />
+      <workItem from="1749347481736" duration="12208000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -683,7 +679,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749353493875</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="bug修复">
+      <option name="closed" value="true" />
+      <created>1749359492940</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1749359492940</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -701,7 +705,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="缝代码2.0" />
     <MESSAGE value="inference.py 文件fix" />
     <MESSAGE value="test" />
     <MESSAGE value="图片路径修改" />
@@ -726,7 +729,8 @@
     <MESSAGE value="metrics更新" />
     <MESSAGE value="重新构建运行框架，明早重新跑下" />
     <MESSAGE value="模块替换CBAM和skmxlstm" />
-    <option name="LAST_COMMIT_MESSAGE" value="模块替换CBAM和skmxlstm" />
+    <MESSAGE value="bug修复" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug修复" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

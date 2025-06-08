@@ -153,23 +153,15 @@ def train_val(
         iou_from_f1 = f1_score / (2 - f1_score) if (2 - f1_score) != 0 else 0.0
         epoch_metrics['IoU'] = iou_from_f1
 
-        improved_metrics = 0
-        current_metrics = {
-            'precision': epoch_metrics['precision'],
-            'recall': epoch_metrics['recall'],
-            'f1score': epoch_metrics['f1score'],
-            'IoU': epoch_metrics['IoU']  # 使用新的 IoU
-        }
+        current_f1 = epoch_metrics['f1score']
+        best_f1 = best_metrics.get('best_f1score', 0)
 
-        for metric_name, current_value in current_metrics.items():
-            best_value = best_metrics.get(f'best_{metric_name}', 0)
-            if current_value > best_value:
-                improved_metrics += 1
-
-        if improved_metrics >= 3:
+        if current_f1 > best_f1:
             # 更新最佳指标
-            for metric_name, current_value in current_metrics.items():
-                best_metrics[f'best_{metric_name}'] = current_value
+            best_metrics['best_precision'] = epoch_metrics['precision']
+            best_metrics['best_recall'] = epoch_metrics['recall']
+            best_metrics['best_f1score'] = current_f1
+            best_metrics['best_IoU'] = epoch_metrics['IoU']
 
             non_improved_epoch = 0
 
@@ -178,10 +170,10 @@ def train_val(
 
             # 记录指标到 W&B
             log_swanlab.log({
-                f'{mode}_{epoch}_best_precision': current_metrics['precision'],
-                f'{mode}_{epoch}_best_recall': current_metrics['recall'],
-                f'{mode}_{epoch}_best_f1score': current_metrics['f1score'],
-                f'{mode}_{epoch}_best_IoU': current_metrics['IoU']
+                f'{mode}_{epoch}_best_precision': epoch_metrics['precision'],
+                f'{mode}_{epoch}_best_recall': epoch_metrics['recall'],
+                f'{mode}_{epoch}_best_f1score': current_f1,
+                f'{mode}_{epoch}_best_IoU': epoch_metrics['IoU']
             })
         else:
             non_improved_epoch += 1
@@ -191,10 +183,9 @@ def train_val(
                     g['lr'] = lr
                 non_improved_epoch = 0
 
-        # save checkpoint every specified interval,推荐每 10 epoch 保存一次，便于中断恢复。(所以：ph.save_intervalv == 10)
+        # Save checkpoint every few epochs
         if (epoch + 1) % ph.save_interval == 0 and ph.save_checkpoint:
             save_model(net, checkpoint_path, epoch, 'checkpoint', optimizer=optimizer)
-
 
     if mode == 'train':
         return log_swanlab, net, optimizer, grad_scaler, total_step, lr , epoch_loss
