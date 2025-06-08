@@ -67,7 +67,6 @@ def train_val(
 
         batch_img1 = batch_img1.float().to(device)
         batch_img2 = batch_img2.float().to(device)
-        # labels = labels.float().to(device)
         labels = labels.float().to(device)
 
         if mode == 'train':

@@ -7,13 +7,14 @@ import torch
 from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score,JaccardIndex
 # from models.Models import DPCD
 from models.Models_trans import DPCD
+from models.FHLCDNet import FHLCDNet
 from utils.dataset_process import compute_mean_std
 from tqdm import tqdm
 
 '''
     
 '''
-def train_net(dataset_name, load_checkpoint=True):
+def test_models(dataset_name, load_checkpoint=True):
     # 1. Create dataset
 
     # compute mean and std of train dataset to normalize train/val/test dataset
@@ -40,25 +41,23 @@ def train_net(dataset_name, load_checkpoint=True):
     # 4. Set up device, model, metric calculator
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     logging.basicConfig(level=logging.INFO)
-    logging.info(f'Using device {device}')
-    net = DPCD()
+    print(f'Using device {device}')
+    net = FHLCDNet()
     net.to(device=device)
 
-    assert ph.load, 'Loading model error, checkpoint ph.load'
-    load_model = torch.load(ph.load, map_location=device)
+    load_model = torch.load(ph.load_best_pth, map_location=device)
     if load_checkpoint:
         net.load_state_dict(load_model['net'])
     else:
         net.load_state_dict(load_model)
-    logging.info(f'Model loaded from {ph.load}')
+    print(f'Model loaded from {ph.load_best_pth}')
     torch.save(net.state_dict(), f'{dataset_name}_best_model.pth')
 
     metric_collection = MetricCollection({
-        'accuracy': Accuracy().to(device=device),
-        'precision': Precision().to(device=device),
-        'recall': Recall().to(device=device),
-        'f1score': F1Score().to(device=device),
-        'IoU': JaccardIndex(num_classes=2, task="binary").to(device=device)
+        'accuracy': Accuracy(task='binary').to(device=device),
+        'precision': Precision(task='binary').to(device=device),
+        'recall': Recall(task='binary').to(device=device),
+        'f1score': F1Score(task='binary').to(device=device)
     })  # metrics calculator
 
     net.eval()
@@ -71,11 +70,10 @@ def train_net(dataset_name, load_checkpoint=True):
             labels = labels.float().to(device)
 
             cd_preds = net(batch_img1, batch_img2)
-            cd_preds = torch.sigmoid(cd_preds)
 
             # Calculate and log other batch metrics
-            cd_preds = cd_preds.float()
-            labels = labels.int().unsqueeze(1)
+            cd_preds = torch.sigmoid(cd_preds).float()
+            labels = labels.int()
             metric_collection.update(cd_preds, labels)
 
             # clear batch variables from memory
@@ -96,8 +94,8 @@ def train_net(dataset_name, load_checkpoint=True):
 if __name__ == '__main__':
 
     try:
-        # todo:需要修改成自己的数据集路径
-        train_net(dataset_name='CLCD', load_checkpoint=False)
+        # TODO:需要修改成自己的数据集路径
+        test_models(dataset_name=ph.dataset_name, load_checkpoint=False)
     except KeyboardInterrupt:
         logging.info('Error')
         sys.exit(0)

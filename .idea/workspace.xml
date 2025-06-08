@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="学习率策略版本有待升级">
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="基于val的早停策略，但是关系学习率的策略还有待升级">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_wandb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/inference.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/utils_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -412,7 +413,7 @@
       <workItem from="1749307501144" duration="2617000" />
       <workItem from="1749347481736" duration="12779000" />
       <workItem from="1749360968997" duration="1257000" />
-      <workItem from="1749375582907" duration="4556000" />
+      <workItem from="1749375582907" duration="7778000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -750,7 +751,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749379170686</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="基于val的早停策略，但是关系学习率的策略还有待升级">
+      <option name="closed" value="true" />
+      <created>1749380458508</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1749380458508</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -768,7 +777,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="图片路径修改fix" />
     <MESSAGE value="过拟合处理--添加了关于dropout-以及损失函数的修改" />
     <MESSAGE value="损失函数新版本迭代--暂时还未使用" />
     <MESSAGE value="最好指标标准 修改" />
@@ -793,7 +801,8 @@
     <MESSAGE value="fix" />
     <MESSAGE value="学习率策略有待升级！！1" />
     <MESSAGE value="学习率策略版本有待升级" />
-    <option name="LAST_COMMIT_MESSAGE" value="学习率策略版本有待升级" />
+    <MESSAGE value="基于val的早停策略，但是关系学习率的策略还有待升级" />
+    <option name="LAST_COMMIT_MESSAGE" value="基于val的早停策略，但是关系学习率的策略还有待升级" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -865,7 +874,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/utils_wandb.py</url>
-          <line>139</line>
+          <line>138</line>
           <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
