@@ -178,10 +178,12 @@ def train_net(dataset_name):
     net = net.to(device=device)
     optimizer = optim.AdamW(net.parameters(), lr=ph.learning_rate,
                             weight_decay=ph.weight_decay)  # optimizer
+    # 添加 CosineAnnealingWarmRestarts 学习率调度器
+    lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=15, T_mult=2)
+
     warmup_lr = np.arange(1e-7, ph.learning_rate,
                           (ph.learning_rate - 1e-7) / ph.warm_up_step)  # warm up learning rate
-    # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=ph.patience,
-    #                                                  factor=ph.factor)  # learning rate scheduler
+
     grad_scaler = torch.cuda.amp.GradScaler()  # loss scaling for amp
 
     # load model and optimizer
@@ -198,8 +200,6 @@ def train_net(dataset_name):
     total_step = 0  # logging step
     lr = ph.learning_rate  # learning rate
 
-    # criterion = FCCDN_loss_without_seg  # loss function
-    # criterion = nn.BCEWithLogitsLoss().cuda()
     criterion = FCCDN_loss_without_seg
 
     best_metrics = dict.fromkeys(['best_f1score', 'best_recall','best_precision','best_IoU'], 0)  # best evaluation metrics

@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/cal_params.py" afterDir="false" />
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="学习率策略有待升级！！1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/LSTMNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/LSTMNet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_wandb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -413,7 +411,7 @@
       <workItem from="1749307501144" duration="2617000" />
       <workItem from="1749347481736" duration="12779000" />
       <workItem from="1749360968997" duration="1257000" />
-      <workItem from="1749375582907" duration="1333000" />
+      <workItem from="1749375582907" duration="3543000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -735,7 +733,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749362224071</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="学习率策略有待升级！！1">
+      <option name="closed" value="true" />
+      <created>1749377039276</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1749377039276</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -753,7 +759,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="test" />
     <MESSAGE value="图片路径修改" />
     <MESSAGE value="图片路径修改fix" />
     <MESSAGE value="过拟合处理--添加了关于dropout-以及损失函数的修改" />
@@ -778,7 +783,8 @@
     <MESSAGE value="bug修复" />
     <MESSAGE value="添加dropout" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="学习率策略有待升级！！1" />
+    <option name="LAST_COMMIT_MESSAGE" value="学习率策略有待升级！！1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
