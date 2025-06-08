@@ -154,7 +154,8 @@ def train_net(dataset_name):
         config={
             "learning_rate": ph.learning_rate,
             "dataset": ph.dataset_name,
-            "epochs": ph.batch_size
+            "batchsize": ph.batch_size,
+            "total_epoches":ph.epochs
         }
     )
 

@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.cuda.amp import autocast
 from enum import Enum
-from CDXLSTM.vision_lstm import ViLBlock, SequenceTraversal
+from models.CDXLSTM.vision_lstm import ViLBlock, SequenceTraversal
 from torch.nn import functional as F
 from functools import partial
 
@@ -494,8 +494,9 @@ class CDXLSTM(nn.Module):
         self.mlp2 = Mlp(in_features=channels[0], out_features=2)
         self.dwc = dsconv_3x3(channels[0], channels[0])
 
-    def forward(self, inputs):
-        featuresA, featuresB = inputs # 这里面的featuresA, featuresB分别指的是下采样的四个阶段的图片
+    def forward(self, inputsA,inputsB):
+        featuresA = inputsA # 这里面的featuresA, featuresB分别指的是下采样的四个阶段的图片
+        featuresB = inputsB
         # CTSR 模块
         # 第一层、第二层采样的图片进入 CSTR 模块
         x_diff_0 = self.fusion0(featuresA[0], featuresB[0]) # 输入格式b,128,h/2,w/2 输出格式 b,128,h/2,w/2   fusion0 这个模块不改变b,c,h,w
