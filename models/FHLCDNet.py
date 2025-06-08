@@ -6,8 +6,6 @@ from torchvision.models import VGG16_BN_Weights# torchvision 0.13+版本改变�
 #增加decoder解码器，不concat多尺度特征生成guide map,也concat多尺度特征生成最后输出
 class FHLCDNet(nn.Module):
     def __init__(self,):
-        self.dropout = nn.Dropout2d(p=0.2)  # 在 __init__ 中定义
-
         super(FHLCDNet, self).__init__()
         # vgg16_bn = models.vgg16_bn(pretrained=True)
         vgg16_bn = models.vgg16_bn(weights=VGG16_BN_Weights.IMAGENET1K_V1) # 新版本
