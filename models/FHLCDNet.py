@@ -6,6 +6,8 @@ from torchvision.models import VGG16_BN_Weights# torchvision 0.13+版本改变�
 #增加decoder解码器，不concat多尺度特征生成guide map,也concat多尺度特征生成最后输出
 class FHLCDNet(nn.Module):
     def __init__(self,):
+        self.dropout = nn.Dropout2d(p=0.2)  # 在 __init__ 中定义
+
         super(FHLCDNet, self).__init__()
         # vgg16_bn = models.vgg16_bn(pretrained=True)
         vgg16_bn = models.vgg16_bn(weights=VGG16_BN_Weights.IMAGENET1K_V1) # 新版本
@@ -38,9 +40,26 @@ class FHLCDNet(nn.Module):
 
         #相比v2 额外的模块
         self.upsample2x=nn.UpsamplingBilinear2d(scale_factor=2)
-        self.decoder_module4 = ResidualBasicConv2d(1024,512,3,1,1)
-        self.decoder_module3 = ResidualBasicConv2d(768,256,3,1,1)
-        self.decoder_module2 = ResidualBasicConv2d(384,128,3,1,1)
+        # self.decoder_module4 = ResidualBasicConv2d(1024,512,3,1,1)
+        # self.decoder_module3 = ResidualBasicConv2d(768,256,3,1,1)
+        # self.decoder_module2 = ResidualBasicConv2d(384,128,3,1,1)
+        self.decoder_module4 = nn.Sequential(
+            ResidualBasicConv2d(1024, 512, 3, 1, 1),
+            nn.Dropout2d(p=0.3)  # 添加Dropout，概率设为0.3
+        )
+
+        self.decoder_module3 = nn.Sequential(
+            ResidualBasicConv2d(768, 256, 3, 1, 1),
+            nn.Dropout2d(p=0.2)  # 概率设为0.2
+        )
+
+        self.decoder_module2 = nn.Sequential(
+            ResidualBasicConv2d(384, 128, 3, 1, 1),
+            nn.Dropout2d(p=0.1)  # 概率设为0.1
+        )
+
+
+
 
     def forward(self,A,B):
         '''
