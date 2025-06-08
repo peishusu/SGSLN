@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="bug修复">
-      <change beforePath="$PROJECT_DIR$/utils/utils_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,29 +44,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.FHLCDNet.executor": "Debug",
-    "Python.HSANet.executor": "Run",
-    "Python.LSTMNet (1).executor": "Debug",
-    "Python.data_loading.executor": "Debug",
-    "Python.train.executor": "Run",
-    "Python.train_wandb.executor": "Run",
-    "Python.utils_wandb.executor": "Debug",
-    "Python.xformer.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/study/research/Exchanging Dual Encoder-Decoder A New/SGSLN/models/CDXLSTM",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Python",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.FHLCDNet.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.HSANet.executor&quot;: &quot;Run&quot;,
+    &quot;Python.LSTMNet (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Python.data_loading.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.train.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_wandb.executor&quot;: &quot;Run&quot;,
+    &quot;Python.utils_wandb.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.xformer.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/study/research/Exchanging Dual Encoder-Decoder A New/SGSLN/models/CDXLSTM&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Python&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\study\research\Exchanging Dual Encoder-Decoder A New\SGSLN\models\CDXLSTM" />
@@ -85,6 +85,9 @@
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -405,7 +408,7 @@
       <workItem from="1749046411191" duration="30976000" />
       <workItem from="1749287494133" duration="4545000" />
       <workItem from="1749307501144" duration="2617000" />
-      <workItem from="1749347481736" duration="12208000" />
+      <workItem from="1749347481736" duration="12779000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -687,7 +690,23 @@
       <option name="project" value="LOCAL" />
       <updated>1749359492940</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="fix">
+      <option name="closed" value="true" />
+      <created>1749359879427</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1749359879427</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fix">
+      <option name="closed" value="true" />
+      <created>1749360239590</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1749360239590</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -724,13 +743,13 @@
     <MESSAGE value="加了一些自己的设想" />
     <MESSAGE value="尝试替换新的混合lstm模块，调优了下" />
     <MESSAGE value="新的net" />
-    <MESSAGE value="fix" />
     <MESSAGE value="增加swanlab" />
     <MESSAGE value="metrics更新" />
     <MESSAGE value="重新构建运行框架，明早重新跑下" />
     <MESSAGE value="模块替换CBAM和skmxlstm" />
     <MESSAGE value="bug修复" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug修复" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

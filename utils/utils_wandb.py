@@ -107,16 +107,16 @@ def train_val(
         batch_metrics = metric_collection.forward(preds, labels)  # compute metric
 
         # log loss and metric
-        log_swanlab.log({
-            f'{mode} loss': cd_loss,
-            f'{mode} accuracy': batch_metrics['accuracy'],
-            f'{mode} precision': batch_metrics['precision'],
-            f'{mode} recall': batch_metrics['recall'],
-            f'{mode} f1score': batch_metrics['f1score'],
-            'learning rate': optimizer.param_groups[0]['lr'],
-            'step': total_step,
-            'epoch': epoch
-        })
+        # log_swanlab.log({
+        #     f'{mode} loss': cd_loss,
+        #     f'{mode} accuracy': batch_metrics['accuracy'],
+        #     f'{mode} precision': batch_metrics['precision'],
+        #     f'{mode} recall': batch_metrics['recall'],
+        #     f'{mode} f1score': batch_metrics['f1score'],
+        #     'learning rate': optimizer.param_groups[0]['lr'],
+        #     'step': total_step,
+        #     'epoch': epoch
+        # })
 
         del batch_img1, batch_img2, labels
 
