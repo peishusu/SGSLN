@@ -28,6 +28,33 @@ class BasicConv2d(nn.Module):
         x = self.relu(x)
         return x
 
+class ResidualBasicConv2d(nn.Module):
+    def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1):
+        super(ResidualBasicConv2d, self).__init__()
+        self.conv = nn.Conv2d(in_planes, out_planes,
+                              kernel_size=kernel_size, stride=stride,
+                              padding=padding, dilation=dilation, bias=False)
+        self.bn = nn.BatchNorm2d(out_planes)
+
+        # 残差路径：是否需要 projection
+        if in_planes != out_planes or stride != 1:
+            self.residual_conv = nn.Sequential(
+                nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_planes)
+            )
+        else:
+            self.residual_conv = nn.Identity()
+
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        identity = self.residual_conv(x)
+        out = self.conv(x)
+        out = self.bn(out)
+        out += identity  # 残差相加
+        return self.relu(out)  # 残差连接后再激活
+
+
 
 class Atten_Cross(nn.Module):
     def __init__(self, in_dim):
@@ -114,16 +141,20 @@ class XLSTM_axial(nn.Module):
         self.catconvA = dsconv_3x3(in_channel * 2, in_channel)
         self.catconvB = dsconv_3x3(in_channel * 2, in_channel)
         self.catconv = dsconv_3x3(in_channel * 2, out_channel)
-        self.convA = nn.Conv2d(in_channel, 1, 1)
-        self.convB = nn.Conv2d(in_channel, 1, 1)
-        self.sigmoid = nn.Sigmoid()
-        # TODO ：尝试替换一下
-        self.xlstm_h = ViLLayer(dim = in_channel)
-        self.xlstm_w = ViLLayer(dim = in_channel)
-        # self.xlstm_h = SKmLSTMLayer(dim=in_channel)
-        # self.xlstm_w = SKmLSTMLayer(dim=in_channel)
-        # SKmLSTMLayer
+
+        # self.convA = nn.Conv2d(in_channel, 1, 1)
+        # self.convB = nn.Conv2d(in_channel, 1, 1)
+        # self.sigmoid = nn.Sigmoid()
+        # ✅ 替换 convA/convB → CBAM
+        self.cbamA = CBAMBlock(in_channel)
+        self.cbamB = CBAMBlock(in_channel)
+
+        self.xlstm_h = SKmLSTMLayer(dim=in_channel)
+        self.xlstm_w = SKmLSTMLayer(dim=in_channel)
+
         self.xlstm_conv = conv_1x1(in_channel, in_channel)
+        self.sigmoid = nn.Sigmoid()
+
         self.pos_emb_h = SqueezeAxialPositionalEmbedding(in_channel, 16)
         self.pos_emb_w = SqueezeAxialPositionalEmbedding(in_channel, 16)
 
@@ -139,8 +170,11 @@ class XLSTM_axial(nn.Module):
         x_diffA = self.catconvA(torch.cat([x_diff, xA], dim=1))
         x_diffB = self.catconvB(torch.cat([x_diff, xB], dim=1))
 
-        A_weight = self.sigmoid(self.convA(x_diffA))
-        B_weight = self.sigmoid(self.convB(x_diffB))
+        # A_weight = self.sigmoid(self.convA(x_diffA))
+        # B_weight = self.sigmoid(self.convB(x_diffB))
+        # ✅ 用 CBAM 替换 conv+sigmoid 权重
+        A_weight = self.cbamA(x_diffA)
+        B_weight = self.cbamB(x_diffB)
 
         xA = A_weight * x_xlstm * xA
         xB = B_weight * x_xlstm * xB
@@ -155,26 +189,34 @@ class XLSTM_atten(nn.Module):
         self.catconvA = dsconv_3x3(in_channel * 2, in_channel)
         self.catconvB = dsconv_3x3(in_channel * 2, in_channel)
         self.catconv = dsconv_3x3(in_channel * 2, out_channel)
-        self.convA = nn.Conv2d(in_channel, 1, 1)
-        self.convB = nn.Conv2d(in_channel, 1, 1)
-        self.sigmoid = nn.Sigmoid()
 
-        # TODO：测试，我测试一下啊，！！！！ 代替换
-        self.xlstm = ViLLayer(dim = in_channel)
+        # Conv模块
+        # self.convA = nn.Conv2d(in_channel, 1, 1)
+        # self.convB = nn.Conv2d(in_channel, 1, 1)
+        # sigmod模块
+        # self.sigmoid = nn.Sigmoid()
+        # ✅ 替换掉 convA / convB + sigmoid
+        self.cbamA = CBAMBlock(in_channel)
+        self.cbamB = CBAMBlock(in_channel)
 
-        # self.xlstm = SKmLSTMLayer(dim = in_channel)
+        # self.xlstm = ViLLayer(dim = in_channel)
+        self.xlstm = SKmLSTMLayer(dim = in_channel)
 
 
     def forward(self, xA, xB):
         x_diff = xA - xB
         B,C,H,W = x_diff.shape
+
+        # Bi-directional SKmLSTM 处理 diff 特征
         x_xlstm = (self.xlstm(x_diff) + self.xlstm(x_diff.flip([-1, -2])).flip([-1, -2]))
 
         x_diffA = self.catconvA(torch.cat([x_diff, xA], dim=1))
         x_diffB = self.catconvB(torch.cat([x_diff, xB], dim=1))
 
-        A_weight = self.sigmoid(self.convA(x_diffA))
-        B_weight = self.sigmoid(self.convB(x_diffB))
+        # A_weight = self.sigmoid(self.convA(x_diffA))
+        # B_weight = self.sigmoid(self.convB(x_diffB))
+        A_weight = self.cbamA(x_diffA)
+        B_weight = self.cbamB(x_diffB)
 
         xA = A_weight * x_xlstm
         xB = B_weight * x_xlstm
@@ -234,3 +276,119 @@ class SqueezeAxialPositionalEmbedding(nn.Module):
         x = x + F.interpolate(self.pos_embed, size=(N), mode='linear', align_corners=False)
 
         return x
+
+
+
+'''
+    所请求的 SK-Fusion + mLSTM 混合优化版本 的代码实现，结构和输入输出格式完全 对齐 ViLLayer（即：输入 [B, C, H, W] → 展平 → 处理 → 再 reshape 回 [B, C, H, W]）。
+'''
+class SKmLSTMLayer(nn.Module):
+    def __init__(self, dim, hidden_dim=None, reduction=8):
+        super().__init__()
+        self.dim = dim
+        self.hidden_dim = hidden_dim or dim
+
+        self.norm = nn.LayerNorm(dim)
+
+        # 分支1：标准LSTM
+        self.lstm = nn.LSTM(input_size=dim, hidden_size=self.hidden_dim, batch_first=True)
+
+        # 分支2：简化 mLSTM
+        self.W_m = nn.Linear(self.hidden_dim, dim, bias=False)
+        self.m_lstm_gates = nn.Linear(dim, 4 * self.hidden_dim)
+
+        # 分支3：跳连路径（轻量）
+        self.skip_proj = nn.Identity()
+
+        # 门控机制：Selective Kernel 融合权重学习
+        self.global_pool = nn.AdaptiveAvgPool1d(1)
+        self.fc1 = nn.Linear(self.hidden_dim * 3, self.hidden_dim // reduction)
+        self.fc2 = nn.Linear(self.hidden_dim // reduction, 3)
+        self.softmax = nn.Softmax(dim=1)
+
+        # 输出投影回 dim
+        self.out_proj = nn.Linear(self.hidden_dim, dim)
+
+    @autocast(enabled=False)
+    def forward(self, x):
+        if x.dtype == torch.float16:
+            x = x.float()
+
+        B, C = x.shape[:2]
+        assert C == self.dim, f"Input channel {C} != self.dim {self.dim}"
+        n_tokens = x.shape[2:].numel()
+        spatial_dims = x.shape[2:]
+
+        x_flat = x.reshape(B, C, n_tokens).transpose(1, 2)  # [B, T, C]
+        x_norm = self.norm(x_flat)
+
+        # 分支1：标准LSTM
+        h_lstm, _ = self.lstm(x_norm)  # [B, T, H]
+
+        # 分支2：简化 mLSTM
+        m = self.W_m(h_lstm) * x_norm  # 乘法门
+        gates = self.m_lstm_gates(m)
+        i, f, g, o = gates.chunk(4, dim=-1)
+        i = torch.sigmoid(i)
+        f = torch.sigmoid(f)
+        g = torch.tanh(g)
+        o = torch.sigmoid(o)
+        c_m = i * g  # 没有历史c，简化版
+        h_m = o * torch.tanh(c_m)  # [B, T, H]
+
+        # 分支3：跳连路径
+        h_skip = self.skip_proj(x_norm)  # [B, T, C]
+
+        # 融合准备
+        h_concat = torch.stack([h_lstm, h_m, h_skip], dim=1)  # [B, 3, T, H]
+
+        # 全局注意力权重
+        # gap = h_concat.mean(dim=2).mean(dim=-1)  # [B, 3]
+        gap = h_concat.mean(dim=2)  # ✅ 正确：只对时间维度做 GAP，结果是 [B, 3, HIDDEN_DIM]
+        gap_flat = gap.reshape(B, -1)  # 得到 [B, 3 * HIDDEN_DIM]
+
+        # gap_flat = torch.cat([gap[:, i] for i in range(3)], dim=-1)  # [B, 3H]
+        attn = self.fc2(F.relu(self.fc1(gap_flat)))  # [B, 3]
+        weights = self.softmax(attn).unsqueeze(-1).unsqueeze(-1)  # [B, 3, 1, 1]
+
+        # 加权融合
+        fused = (h_concat * weights).sum(dim=1)  # [B, T, H]
+
+        # 输出映射回 dim
+        out_proj = self.out_proj(fused)  # [B, T, C]
+
+        # reshape 回原图结构
+        out = out_proj.transpose(1, 2).reshape(B, C, *spatial_dims)
+        return out
+
+# 通道和空间注意力机制
+class CBAMBlock(nn.Module):
+    def __init__(self, channels, reduction=16, kernel_size=7):
+        super(CBAMBlock, self).__init__()
+        # Channel Attention
+        self.ca = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Conv2d(channels, channels // reduction, 1, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(channels // reduction, channels, 1, bias=False),
+            nn.Sigmoid()
+        )
+        # Spatial Attention
+        self.sa = nn.Sequential(
+            nn.Conv2d(2, 1, kernel_size, padding=kernel_size//2, bias=False),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        # Channel attention
+        ca_weight = self.ca(x)
+        x = x * ca_weight
+
+        # Spatial attention
+        max_out, _ = torch.max(x, dim=1, keepdim=True)
+        avg_out = torch.mean(x, dim=1, keepdim=True)
+        sa_input = torch.cat([avg_out, max_out], dim=1)
+        sa_weight = self.sa(sa_input)
+        x = x * sa_weight
+        return x
+

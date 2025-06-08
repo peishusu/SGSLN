@@ -1,6 +1,6 @@
 from models.FHLCDNet_parts import *
 from torchvision import models
-from torchvision.models import VGG16_BN_Weights # torchvision 0.13+版本改变了加载预训练模型的方式
+from torchvision.models import VGG16_BN_Weights# torchvision 0.13+版本改变了加载预训练模型的方式
 
 
 #增加decoder解码器，不concat多尺度特征生成guide map,也concat多尺度特征生成最后输出
@@ -15,11 +15,6 @@ class FHLCDNet(nn.Module):
         self.down3 = vgg16_bn.features[22:32]  # 512
         self.down4 = vgg16_bn.features[32:42]  # 512
 
-        # TODO:这个模块有待替换 想替换成CTSR CTGP 这两个模块
-        # self.conv_reduce_1 = BasicConv2d(128*2,128,3,1,1)
-        # self.conv_reduce_2 = BasicConv2d(256*2,256,3,1,1)
-        # self.conv_reduce_3 = BasicConv2d(512*2,512,3,1,1)
-        # self.conv_reduce_4 = BasicConv2d(512*2,512,3,1,1)
         # fusion0 fusion1 对应CSTR模块
         self.fusion0 = XLSTM_axial(128, 128)
         self.fusion1 = XLSTM_axial(256,256)
@@ -28,10 +23,7 @@ class FHLCDNet(nn.Module):
         self.fusion3 = XLSTM_atten(512, 512)
 
 
-        self.decoder = nn.Sequential(BasicConv2d(512,64,3,1,1),
-                                     nn.Conv2d(64,1,3,1,1))
-
-        self.decoder_final = nn.Sequential(BasicConv2d(128, 64, 3, 1, 1),
+        self.decoder_final = nn.Sequential(ResidualBasicConv2d(128, 64, 3, 1, 1),
                                            nn.Conv2d(64, 1, 1))
 
         self.cgm_1 = Atten_Cross(128)
@@ -46,9 +38,9 @@ class FHLCDNet(nn.Module):
 
         #相比v2 额外的模块
         self.upsample2x=nn.UpsamplingBilinear2d(scale_factor=2)
-        self.decoder_module4 = BasicConv2d(1024,512,3,1,1)
-        self.decoder_module3 = BasicConv2d(768,256,3,1,1)
-        self.decoder_module2 = BasicConv2d(384,128,3,1,1)
+        self.decoder_module4 = ResidualBasicConv2d(1024,512,3,1,1)
+        self.decoder_module3 = ResidualBasicConv2d(768,256,3,1,1)
+        self.decoder_module2 = ResidualBasicConv2d(384,128,3,1,1)
 
     def forward(self,A,B):
         '''
@@ -69,11 +61,6 @@ class FHLCDNet(nn.Module):
         layer4_B = self.down4(layer3_B) # B,512,H/16,W/16
 
         # Concatenate features from A and B
-        # TODO： 替换模块 为 CTSR 和 CTGP 模块  Done!!!!
-        # layer1 = self.conv_reduce_1(torch.cat((layer1_B, layer1_A), dim=1)) # 输入格式B,128,H/2,W/2  输出格式： B,128,H/2,W/2
-        # layer2 = self.conv_reduce_2(torch.cat((layer2_B, layer2_A), dim=1)) # 输入格式：B,256,H/4,W/4 输出格式：B,256,H/4,W/4
-        # layer3 = self.conv_reduce_3(torch.cat((layer3_B, layer3_A), dim=1)) # 输入格式：B,512,H/8,W/8  输出格式： B，512，H/8,W/8
-        # layer4 = self.conv_reduce_4(torch.cat((layer4_B, layer4_A), dim=1)) # 输入格式：B,512,H/16,W/16 输出格式：B，512,h/16,w/16
         # CTSR 模块
         # 第一层、第二层采样的图片进入 CSTR 模块
         layer1 = self.fusion0(layer1_A,layer1_B)  # 输入格式b,128,h/2,w/2 输出格式 b,128,h/2,w/2   fusion0 这个模块不改变b,c,h,w
@@ -82,12 +69,6 @@ class FHLCDNet(nn.Module):
         layer3 = self.fusion2(layer3_A,layer3_B)  # 输入格式b,512,h/8,w/8 输出格式 b,512,h/8,w/8    fusion2 这个模块不改变b,c,h,w
         layer4 = self.fusion3(layer4_A,layer4_B)  # 输入格式b,512,h/16,w/16 输出格式 b,512,h/16,w/16  fusion3 这个模块不改变b,c,h,w
 
-
-
-        # change semantic guiding map 这部分没用到
-        layer4_1 = F.interpolate(layer4, layer1.size()[2:], mode='bilinear', align_corners=True) # layer4_1的格式为：B,512,H/2,W/2
-        feature_fuse=layer4_1 #需要注释！
-        change_map = self.decoder(feature_fuse)  #change_map 的格式为：B,1,H/2,W/2
 
         # Self_Attention模块
         layer4_4 = self.sa_4(layer4) # 输入格式为：B，512,h/16,w/16 输出格式：B,512,H/16,W/16
@@ -102,7 +83,7 @@ class FHLCDNet(nn.Module):
         layer2_4 = self.cgm_2(layer2_3,layer2) # cross attentio模块 输入格式为：layer2_3->b,256,h/4,w/4 layer2->B,256,H/4,W/4 输出格式:b,256,h/4,w/4
         feature2 = self.decoder_module2(torch.cat([self.upsample2x(layer2_4), layer1], 1))  # fushion module模块 输入格式: layer2_4-b,256,h/4,w/4 layer1 ->  B,128,H/2,W/2 输出格式:b,128,h/2,w/2
 
-        change_map = F.interpolate(change_map, size, mode='bilinear', align_corners=True) #输入格式 B,1,H/2,W/2 输出格式：b,1,h,w
+        # change_map = F.interpolate(change_map, size, mode='bilinear', align_corners=True) #输入格式 B,1,H/2,W/2 输出格式：b,1,h,w
 
         # 实际上就是Classfiler
         final_map = self.decoder_final(feature2) #输入格式 : B,128,H/2,W/2 输出格式: b,1,h/2,w/2
