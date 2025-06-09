@@ -119,7 +119,8 @@ def train_val(
     iou_from_f1 = f1_score / (2 - f1_score) if (2 - f1_score) != 0 else 0.0
     epoch_metrics['IoU'] = iou_from_f1
     # 记录当前epoch的学习率
-    log_swanlab.log({f'curEpoch_learning rate': optimizer.param_groups[0]['lr'], 'epoch': epoch})
+    cur_lr = optimizer.param_groups[0]['lr']
+    log_swanlab.log({f'curEpoch_learning rate': cur_lr, 'epoch': epoch})
     for k in epoch_metrics.keys():
         log_swanlab.log({f'epoch_{mode}_{str(k)}': epoch_metrics[k], 'epoch': epoch})  # log epoch metric
 
@@ -128,8 +129,8 @@ def train_val(
 
     # 将当前epoch的各项指标打印下
     metrics_str = " | ".join([f"{k}: {v.item():.4f}" for k, v in epoch_metrics.items()])
-    # 添加 loss 到字符串中
-    print(f"[Epoch {epoch}][{mode.upper()}] loss: {epoch_loss:.4f} | {metrics_str}")
+    # 添加 loss、lr 到字符串中
+    print(f"[Epoch {epoch}][{mode.upper()}] loss: {epoch_loss:.4f} | {metrics_str} | lr: {cur_lr:.6f}")
 
     # 记录图片
     log_swanlab.log({
