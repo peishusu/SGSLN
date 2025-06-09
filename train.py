@@ -160,7 +160,7 @@ def train_net(dataset_name):
 
             best_iou = val(val_loader, Eva_val, dataset_name, save_path, net, epoch,best_iou)
 
-        # 更新学习率（执行调度器）
+        # 更新学习率（执行调度器）， 每个 epoch 更新一次（最常见）
         lr_scheduler.step()
 
         # 当前epoch执行所使用的时间

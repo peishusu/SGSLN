@@ -202,7 +202,7 @@ def train_net(dataset_name):
         }
     )
 
-    logging.info(f'''Starting training:
+    print(f'''Starting training:
         Epochs:          {ph.epochs}
         Batch size:      {ph.batch_size}
         Learning rate:   {ph.learning_rate}
@@ -225,9 +225,9 @@ def train_net(dataset_name):
     lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=15, T_mult=2)
 
     warmup_lr = np.arange(1e-7, ph.learning_rate,
-                          (ph.learning_rate - 1e-7) / ph.warm_up_step)  # warm up learning rate
+                          (ph.learning_rate - 1e-7) / ph.warm_up_step)  # warmup_lr：预热学习率 作用： 避免初始学习率过大导致训练不稳定或 loss 崩掉。
 
-    grad_scaler = torch.cuda.amp.GradScaler()  # loss scaling for amp
+    grad_scaler = torch.cuda.amp.GradScaler()  # 用于混合精度训练（AMP）时的梯度缩放器 作用： 防止 FP16 浮点溢出，提升训练速度、减少显存占用。
 
     # load model and optimizer
     if ph.load:

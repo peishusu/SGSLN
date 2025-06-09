@@ -60,7 +60,11 @@ def train_val(
         # Zero the gradient if train
         if mode == 'train':
             optimizer.zero_grad()
-            # warm up
+            '''
+                Warmup 是在调度器之前手动设定的。
+                通常在 warmup 阶段结束后，再正式使用 lr_scheduler.step() 来控制学习率。
+                所以 两者不会冲突，只是先后起作用。
+            '''
             if total_step < ph.warm_up_step:
                 for g in optimizer.param_groups:
                     g['lr'] = warmup_lr[total_step]
@@ -75,6 +79,7 @@ def train_val(
                 preds = net(batch_img1, batch_img2) # preds的格式为b,1,h,w
                 loss = criterion(preds, labels)
             cd_loss = loss
+            # grad_scaler与 autocast() 配合，在训练阶段包装反向传播流程：控制反向传播的稳定性；
             grad_scaler.scale(cd_loss).backward()
             torch.nn.utils.clip_grad_norm_(net.parameters(), 20, norm_type=2)
             grad_scaler.step(optimizer)
