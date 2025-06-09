@@ -12,7 +12,6 @@ import ipdb
 from PIL import Image
 
 
-
 def save_model(model, path, epoch, mode, optimizer=None):
     # mode should be checkpoint or loss or f1score
     Path(path).mkdir(parents=True,
@@ -76,7 +75,7 @@ def train_val(
         if mode == 'train':
             # using amp
             with torch.cuda.amp.autocast():
-                preds = net(batch_img1, batch_img2) # preds的格式为b,1,h,w
+                preds = net(batch_img1, batch_img2)  # preds的格式为b,1,h,w
                 loss = criterion(preds, labels)
             cd_loss = loss
             # grad_scaler与 autocast() 配合，在训练阶段包装反向传播流程：控制反向传播的稳定性；
@@ -104,22 +103,9 @@ def train_val(
             label_log = Image.open(list(labels_dir.glob(name[sample_index] + '.*'))[0])
             pred_log = torch.round(preds[sample_index]).cpu().clone().float()
 
-
         preds = torch.sigmoid(preds).float()
         labels = labels.int()
         batch_metrics = metric_collection.forward(preds, labels)  # 计算当前batch的各项指标
-
-        # log loss and metric
-        # log_swanlab.log({
-        #     f'{mode} loss': cd_loss,
-        #     f'{mode} accuracy': batch_metrics['accuracy'],
-        #     f'{mode} precision': batch_metrics['precision'],
-        #     f'{mode} recall': batch_metrics['recall'],
-        #     f'{mode} f1score': batch_metrics['f1score'],
-        #     'learning rate': optimizer.param_groups[0]['lr'],
-        #     'step': total_step,
-        #     'epoch': epoch
-        # })
 
         del batch_img1, batch_img2, labels
 
@@ -133,11 +119,17 @@ def train_val(
     iou_from_f1 = f1_score / (2 - f1_score) if (2 - f1_score) != 0 else 0.0
     epoch_metrics['IoU'] = iou_from_f1
     # 记录当前epoch的学习率
-    log_swanlab.log({f'curEpoch_{epoch}_learning rate': optimizer.param_groups[0]['lr'],'epoch': epoch})
+    log_swanlab.log({f'curEpoch_learning rate': optimizer.param_groups[0]['lr'], 'epoch': epoch})
     for k in epoch_metrics.keys():
-        log_swanlab.log({f'epoch_{mode}_{str(k)}': epoch_metrics[k],'epoch': epoch})  # log epoch metric
-    metric_collection.reset() # 清空所有累积的中间统计量（如TP/FP/TN/FN），为下个epoch做准备。
-    log_swanlab.log({f'epoch_{mode}_loss': epoch_loss,'epoch': epoch})  # log epoch loss
+        log_swanlab.log({f'epoch_{mode}_{str(k)}': epoch_metrics[k], 'epoch': epoch})  # log epoch metric
+
+    metric_collection.reset()  # 清空所有累积的中间统计量（如TP/FP/TN/FN），为下个epoch做准备。
+    log_swanlab.log({f'epoch_{mode}_loss': epoch_loss, 'epoch': epoch})  # log epoch loss
+
+    # 将当前epoch的各项指标打印下
+    metrics_str = " | ".join([f"{k}: {v.item():.4f}" for k, v in epoch_metrics.items()])
+    # 添加 loss 到字符串中
+    print(f"[Epoch {epoch}][{mode.upper()}] loss: {epoch_loss:.4f} | {metrics_str}")
 
     # 记录图片
     log_swanlab.log({
@@ -165,6 +157,7 @@ def train_val(
             best_metrics['best_recall'] = epoch_metrics['recall']
             best_metrics['best_f1score'] = current_f1
             best_metrics['best_IoU'] = epoch_metrics['IoU']
+            best_metrics['best_accuracy'] = epoch_metrics['accuracy']
 
             non_improved_epoch = 0
 
@@ -173,6 +166,7 @@ def train_val(
 
             # 记录指标到 W&B
             log_swanlab.log({
+                f'{mode}_{epoch}_best_accuracy': epoch_metrics['accuracy'],
                 f'{mode}_{epoch}_best_precision': epoch_metrics['precision'],
                 f'{mode}_{epoch}_best_recall': epoch_metrics['recall'],
                 f'{mode}_{epoch}_best_f1score': current_f1,
@@ -194,6 +188,6 @@ def train_val(
         return log_swanlab, net, optimizer, grad_scaler, total_step, lr
     elif mode == 'val':
         val_f1 = epoch_metrics['f1score'].item()
-        return log_swanlab, net, optimizer, total_step, lr, best_metrics, non_improved_epoch,val_f1
+        return log_swanlab, net, optimizer, total_step, lr, best_metrics, non_improved_epoch, val_f1
     else:
         raise NameError('mode should be train or val')
