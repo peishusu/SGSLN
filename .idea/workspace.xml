@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="Lr策略2.0">
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="打印add">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -413,7 +413,7 @@
       <workItem from="1749360968997" duration="1257000" />
       <workItem from="1749375582907" duration="7956000" />
       <workItem from="1749431508568" duration="2935000" />
-      <workItem from="1749481815660" duration="664000" />
+      <workItem from="1749481815660" duration="2930000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -783,7 +783,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749433805945</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="打印add">
+      <option name="closed" value="true" />
+      <created>1749482675183</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1749482675183</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -801,7 +809,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="过拟合问题 调参" />
     <MESSAGE value="添加iou指标" />
     <MESSAGE value="inference文件修改,删除日志部分" />
     <MESSAGE value="iou计算标准修改" />
@@ -826,7 +833,8 @@
     <MESSAGE value="关于学习率的策略还有待升级" />
     <MESSAGE value="添加一些注释" />
     <MESSAGE value="Lr策略2.0" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lr策略2.0" />
+    <MESSAGE value="打印add" />
+    <option name="LAST_COMMIT_MESSAGE" value="打印add" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

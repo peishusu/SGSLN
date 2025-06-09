@@ -12,7 +12,8 @@ class Path_Hyperparameter:
     inference_ratio = 1  # batch_size in val and test equal to batch_size*inference_ratio
     learning_rate: float = 5e-4  # Learning rate
     factor = 0.1  # learning rate decreasing factor
-    patience = 10  # schedular patience
+    # lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=15, T_mult=2)
+    patience = 50  # schedular patience 计算公式为: T_0 + T_0 * T_mult + T_0 / 2
     warm_up_step = 500  # warm up step
     weight_decay: float = 0.0025  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not
