@@ -271,8 +271,6 @@ def train_net(dataset_name):
     )
 
     # 5. Begin training
-
-
     for epoch in range(ph.epochs):
 
         log_swanlab, net, optimizer, grad_scaler, total_step, lr = \
@@ -300,9 +298,12 @@ def train_net(dataset_name):
                     )
                 early_stopper(val_f1)
                 if early_stopper.early_stop:
-                    logging.info(
+                    print(
                         f"Early stopping triggered on val f1score at epoch {epoch}. Best f1: {early_stopper.best_score:.4f}")
                     break
+
+        # 更新学习率（执行调度器）， 每个 epoch 更新一次（最常见）
+        lr_scheduler.step()
 
     log_swanlab.finish()
 

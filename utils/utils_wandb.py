@@ -89,9 +89,8 @@ def train_val(
             # loss = criterion(preds, (labels, seg_label))
             loss = criterion(preds, labels)
             cd_loss = loss
-
+        # epoch_loss记录当前所有的batch_loss之和
         epoch_loss += cd_loss
-
 
         # log the t1_img, t2_img, pred and label
         if i == sample_batch:
@@ -108,7 +107,7 @@ def train_val(
 
         preds = torch.sigmoid(preds).float()
         labels = labels.int()
-        batch_metrics = metric_collection.forward(preds, labels)  # compute metric
+        batch_metrics = metric_collection.forward(preds, labels)  # 计算当前batch的各项指标
 
         # log loss and metric
         # log_swanlab.log({
@@ -124,7 +123,7 @@ def train_val(
 
         del batch_img1, batch_img2, labels
 
-    epoch_metrics = metric_collection.compute()  # compute epoch metric
+    epoch_metrics = metric_collection.compute()  # 计算当前epoch的各项指标
 
     epoch_loss /= n_iter
 
@@ -133,12 +132,12 @@ def train_val(
     f1_score = epoch_metrics['f1score']
     iou_from_f1 = f1_score / (2 - f1_score) if (2 - f1_score) != 0 else 0.0
     epoch_metrics['IoU'] = iou_from_f1
+    # 记录当前epoch的学习率
+    log_swanlab.log({f'curEpoch_{epoch}_learning rate': optimizer.param_groups[0]['lr'],'epoch': epoch})
     for k in epoch_metrics.keys():
-        log_swanlab.log({f'epoch_{mode}_{str(k)}': epoch_metrics[k],
-                       'epoch': epoch})  # log epoch metric
+        log_swanlab.log({f'epoch_{mode}_{str(k)}': epoch_metrics[k],'epoch': epoch})  # log epoch metric
     metric_collection.reset() # 清空所有累积的中间统计量（如TP/FP/TN/FN），为下个epoch做准备。
-    log_swanlab.log({f'epoch_{mode}_loss': epoch_loss,
-                   'epoch': epoch})  # log epoch loss
+    log_swanlab.log({f'epoch_{mode}_loss': epoch_loss,'epoch': epoch})  # log epoch loss
 
     # 记录图片
     log_swanlab.log({
@@ -179,13 +178,13 @@ def train_val(
                 f'{mode}_{epoch}_best_f1score': current_f1,
                 f'{mode}_{epoch}_best_IoU': epoch_metrics['IoU']
             })
-        else:
-            non_improved_epoch += 1
-            if non_improved_epoch == ph.patience:
-                lr *= ph.factor
-                for g in optimizer.param_groups:
-                    g['lr'] = lr
-                non_improved_epoch = 0
+        # else: # 这一快是手动调节学习率
+        #     non_improved_epoch += 1
+        #     if non_improved_epoch == ph.patience:
+        #         lr *= ph.factor
+        #         for g in optimizer.param_groups:
+        #             g['lr'] = lr
+        #         non_improved_epoch = 0
 
         # Save checkpoint every few epochs
         if (epoch + 1) % ph.save_interval == 0 and ph.save_checkpoint:
