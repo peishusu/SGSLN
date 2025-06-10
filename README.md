@@ -1,8 +1,7 @@
-# Semantic-guidance-and-spatial-localization-network
 
 ## Introduction
 
-This repo is the official implementation of ["Exchanging Dual-Encoder–Decoder: A New Strategy for Change Detection With Semantic Guidance and Spatial Localization"](https://arxiv.org/abs/2311.11302)
+本人自己的项目，如果想要使用必须通过本人的统一，否则视为侵犯个人知识产权！！！！
 
 ## Install dependencies
 
@@ -70,42 +69,10 @@ Paper: Semantic feature-constrained multitask siamese network for building chang
 
 Paper: S2Looking: A Satellite Side-Looking Dataset for Building Change Detection
 
-## Start
 
-For training, run the following code in command line.
-
-`python train.py`
-
-If you want to debug while training, run the following code in command line.
-
-`python -m ipdb train.py`
-
-For test and inference, run the following code in command line.
-
-`python inference.py` 
-
-## Config
-
-All the configs of dataset, training, validation and test are put in the file "utils/path_hyperparameter.py", you can change the configs in this file.
-
-## Citation
-
-If you use this work in your research, please cite:
-`@article{zhao2023exchanging,
-  title={Exchanging Dual-Encoder--Decoder: A New Strategy for Change Detection With Semantic Guidance and Spatial Localization},
-  author={Zhao, Sijie and Zhang, Xueliang and Xiao, Pengfeng and He, Guangjun},
-  journal={IEEE Transactions on Geoscience and Remote Sensing},
-  volume={61},
-  pages={1--16},
-  year={2023},
-  publisher={IEEE}
-}`
 
 ---
 
-## 简介
-
-这个项目是["Exchanging Dual-Encoder–Decoder: A New Strategy for Change Detection With Semantic Guidance and Spatial Localization"](https://arxiv.org/abs/2311.11302)的官方pytorch实现
 
 ## 下载需要的库
 
@@ -175,31 +142,3 @@ Paper: S2Looking: A Satellite Side-Looking Dataset for Building Change Detection
 
 ## 开始
 
-在命令行中运行下面的代码来开始训练
-
-`python train.py`
-
-如果你想在训练的时候进行调试，在命令行中运行下面的命令
-
-`python -m ipdb train.py`
-
-在命令行中运行下面的代码来开始测试或者推理
-
-`python inference.py` 
-
-## 设置
-
-所有和数据集、训练、验证和测试的设置都放在了“utils/path_hyperparameter.py”文件中，你可以在这个文件里修改设置
-
-## 引用
-
-如果你在你的研究中用到了这篇工作的内容，请引用：
-`@article{zhao2023exchanging,
-  title={Exchanging Dual-Encoder--Decoder: A New Strategy for Change Detection With Semantic Guidance and Spatial Localization},
-  author={Zhao, Sijie and Zhang, Xueliang and Xiao, Pengfeng and He, Guangjun},
-  journal={IEEE Transactions on Geoscience and Remote Sensing},
-  volume={61},
-  pages={1--16},
-  year={2023},
-  publisher={IEEE}
-}`
