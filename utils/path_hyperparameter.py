@@ -17,7 +17,7 @@ class Path_Hyperparameter:
     weight_decay: float = 0.0025  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not
     load: str = False  # Load model and/or optimizer from a .pth file for testing or continuing training
-    load_best_pth:str = "./S2Looking_best_f1score_model/best_multi_metric_epoch54_Tue Jun 10 23:06:39 2025.pth" # 设置加载pth文件的路径
+    load_best_pth:str = "./S2Looking_best_model.pth" # 设置加载pth文件的路径
     max_norm: float = 20  # gradient clip max norm
 
     # evaluate hyper-parameter
