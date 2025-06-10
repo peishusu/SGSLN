@@ -95,9 +95,9 @@ def train_val(
         if i == sample_batch:
             sample_index = np.random.randint(low=0, high=batch_img1.shape[0])
             # ipdb.set_trace()
-            t1_images_dir = Path(f'./datasets/{dataset_name}/{mode}/t1/')
-            t2_images_dir = Path(f'./datasets/{dataset_name}/{mode}/t2/')
-            labels_dir = Path(f'./datasets/{dataset_name}/{mode}/label/')
+            t1_images_dir = Path(f'../autodl-tmp/datasets/{dataset_name}/{mode}/t1/')
+            t2_images_dir = Path(f'../autodl-tmp/datasets/{dataset_name}/{mode}/t2/')
+            labels_dir = Path(f'../autodl-tmp/datasets/{dataset_name}/{mode}/label/')
             t1_img_log = Image.open(list(t1_images_dir.glob(name[sample_index] + '.*'))[0])
             t2_img_log = Image.open(list(t2_images_dir.glob(name[sample_index] + '.*'))[0])
             label_log = Image.open(list(labels_dir.glob(name[sample_index] + '.*'))[0])
@@ -129,8 +129,9 @@ def train_val(
 
     # 将当前epoch的各项指标打印下
     metrics_str = " | ".join([f"{k}: {v.item():.4f}" for k, v in epoch_metrics.items()])
-    # 添加 loss、lr 到字符串中
+    # 添加 loss\lr 到字符串中
     print(f"[Epoch {epoch}][{mode.upper()}] loss: {epoch_loss:.4f} | {metrics_str} | lr: {cur_lr:.6f}")
+
 
     # 记录图片
     log_swanlab.log({

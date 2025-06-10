@@ -148,18 +148,18 @@ def train_net(dataset_name):
     # 1. Create dataset, checkpoint and best model path
 
     # compute mean and std of train dataset to normalize train/val dataset
-    t1_mean, t1_std = compute_mean_std(images_dir=f'./datasets/{dataset_name}/train/t1/')
-    t2_mean, t2_std = compute_mean_std(images_dir=f'./datasets/{dataset_name}/train/t2/')
+    t1_mean, t1_std = compute_mean_std(images_dir=f'../autodl-tmp/datasets/{dataset_name}/train/t1/')
+    t2_mean, t2_std = compute_mean_std(images_dir=f'../autodl-tmp/datasets/{dataset_name}/train/t2/')
 
     # dataset path should be dataset_name/train or val/t1 or t2 or label
     dataset_args = dict(t1_mean=t1_mean, t1_std=t1_std, t2_mean=t2_mean, t2_std=t2_std)
-    train_dataset = BasicDataset(t1_images_dir=f'./datasets/{dataset_name}/train/t1/',
-                                 t2_images_dir=f'./datasets/{dataset_name}/train/t2/',
-                                 labels_dir=f'./datasets/{dataset_name}/train/label/',
+    train_dataset = BasicDataset(t1_images_dir=f'../autodl-tmp/datasets/{dataset_name}/train/t1/',
+                                 t2_images_dir=f'../autodl-tmp/datasets/{dataset_name}/train/t2/',
+                                 labels_dir=f'../autodl-tmp/datasets/{dataset_name}/train/label/',
                                  train=True, **dataset_args)
-    val_dataset = BasicDataset(t1_images_dir=f'./datasets/{dataset_name}/val/t1/',
-                               t2_images_dir=f'./datasets/{dataset_name}/val/t2/',
-                               labels_dir=f'./datasets/{dataset_name}/val/label/',
+    val_dataset = BasicDataset(t1_images_dir=f'../autodl-tmp/datasets/{dataset_name}/val/t1/',
+                               t2_images_dir=f'../autodl-tmp/datasets/{dataset_name}/val/t2/',
+                               labels_dir=f'../autodl-tmp/datasets/{dataset_name}/val/label/',
                                train=False, **dataset_args)
 
     # 2. Markdown dataset size

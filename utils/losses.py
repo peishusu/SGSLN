@@ -52,9 +52,9 @@ def FCCDN_loss_without_seg(scores, labels):
     # scores = [score.squeeze(1) if len(score.shape) > 3 else score for score in scores]
     # labels = [label.squeeze(1) if len(label.shape) > 3 else label for label in labels]
     if len(scores.shape) > 3:
-        scores = scores.squeeze(1) # 此时scores的格式为(B,H,W)
+        scores = scores.squeeze(1)  # 此时scores的格式为(B,H,W)
     if len(labels.shape) > 3:
-        labels = labels.squeeze(1) # 此时labels的格式为(B,H,W)
+        labels = labels.squeeze(1)  # 此时labels的格式为(B,H,W)
     """ for binary change detection task"""
     # 定义了一个损失函数，dice_focal_loss 是一种结合了 Dice 系数和焦点损失的损失函数。Dice 损失用于衡量预测与真实标签之间的相似度，Focal 损失主要解决类别不平衡的问题，特别适用于变化检测等任务。
     criterion_change = dice_focal_loss()

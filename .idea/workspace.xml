@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="LR和早停策略的兼容">
+    <list default="true" id="25984c04-a74d-417b-9e7f-de2be4294b4b" name="Changes" comment="print lr 堪爆炸的原因">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/inference.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_wandb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/losses.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/losses.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/path_hyperparameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/path_hyperparameter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/utils_wandb.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_wandb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -413,7 +417,8 @@
       <workItem from="1749360968997" duration="1257000" />
       <workItem from="1749375582907" duration="7956000" />
       <workItem from="1749431508568" duration="2935000" />
-      <workItem from="1749481815660" duration="4540000" />
+      <workItem from="1749481815660" duration="5136000" />
+      <workItem from="1749569128590" duration="344000" />
     </task>
     <task id="LOCAL-00001" summary="缝代码">
       <option name="closed" value="true" />
@@ -799,7 +804,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749485585531</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="print lr 堪爆炸的原因">
+      <option name="closed" value="true" />
+      <created>1749487613473</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1749487613473</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -817,7 +830,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="inference文件修改,删除日志部分" />
     <MESSAGE value="iou计算标准修改" />
     <MESSAGE value="框架模板调整--不再使用WANDB" />
     <MESSAGE value="框架模板调整--相对路径调整" />
@@ -842,7 +854,8 @@
     <MESSAGE value="Lr策略2.0" />
     <MESSAGE value="打印add" />
     <MESSAGE value="LR和早停策略的兼容" />
-    <option name="LAST_COMMIT_MESSAGE" value="LR和早停策略的兼容" />
+    <MESSAGE value="print lr 堪爆炸的原因" />
+    <option name="LAST_COMMIT_MESSAGE" value="print lr 堪爆炸的原因" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

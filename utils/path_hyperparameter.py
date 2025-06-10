@@ -2,23 +2,22 @@ class Path_Hyperparameter:
     random_seed = 10
 
     # dataset hyper-parameter
-    dataset_name = 'test_cd'
+    dataset_name = 'S2Looking'
 
-    early_stop_patience = 10  # 连续多少个 epoch 未提升后早停
+    early_stop_patience = 20  # 连续多少个 epoch 未提升后早停
 
     # training hyper-parameter
-    epochs: int = 100  # Number of epochs
-    batch_size: int = 1  # Batch size
+    epochs: int = 150  # Number of epochs
+    batch_size: int = 32  # Batch size
     inference_ratio = 1  # batch_size in val and test equal to batch_size*inference_ratio
-    learning_rate: float = 5e-4  # Learning rate
+    learning_rate: float = 1e-4  # Learning rate
     factor = 0.1  # learning rate decreasing factor
-    # lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=15, T_mult=2)
-    patience = 50  # schedular patience 计算公式为: T_0 + T_0 * T_mult + T_0 / 2
+    patience = 20  # schedular patience
     warm_up_step = 500  # warm up step
     weight_decay: float = 0.0025  # AdamW optimizer weight decay
     amp: bool = True  # if use mixed precision or not
     load: str = False  # Load model and/or optimizer from a .pth file for testing or continuing training
-    load_best_pth:str = "" # 设置加载pth文件的路径
+    load_best_pth:str = "./S2Looking_best_f1score_model/best_multi_metric_epoch54_Tue Jun 10 23:06:39 2025.pth" # 设置加载pth文件的路径
     max_norm: float = 20  # gradient clip max norm
 
     # evaluate hyper-parameter

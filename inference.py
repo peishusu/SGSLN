@@ -4,7 +4,7 @@ from utils.data_loading import BasicDataset
 import logging
 from utils.path_hyperparameter import ph
 import torch
-from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score,JaccardIndex
+from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score, JaccardIndex
 # from models.Models import DPCD
 from models.Models_trans import DPCD
 from models.FHLCDNet import FHLCDNet
@@ -12,19 +12,21 @@ from utils.dataset_process import compute_mean_std
 from tqdm import tqdm
 
 '''
-    
+
 '''
+
+
 def test_models(dataset_name, load_checkpoint=True):
     # 1. Create dataset
 
     # compute mean and std of train dataset to normalize train/val/test dataset
-    t1_mean, t1_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t1/')
-    t2_mean, t2_std = compute_mean_std(images_dir=f'../datasets/{dataset_name}/train/t2/')
+    t1_mean, t1_std = compute_mean_std(images_dir=f'../autodl-tmp/datasets/{dataset_name}/train/t1/')
+    t2_mean, t2_std = compute_mean_std(images_dir=f'../autodl-tmp/datasets/{dataset_name}/train/t2/')
 
     dataset_args = dict(t1_mean=t1_mean, t1_std=t1_std, t2_mean=t2_mean, t2_std=t2_std)
-    test_dataset = BasicDataset(t1_images_dir=f'../datasets/{dataset_name}/test/t1/',
-                                t2_images_dir=f'../datasets/{dataset_name}/test/t2/',
-                                labels_dir=f'../datasets/{dataset_name}/test/label/',
+    test_dataset = BasicDataset(t1_images_dir=f'../autodl-tmp/datasets/{dataset_name}/test/t1/',
+                                t2_images_dir=f'../autodl-tmp/datasets/{dataset_name}/test/t2/',
+                                labels_dir=f'../autodl-tmp/datasets/{dataset_name}/test/label/',
                                 train=False, **dataset_args)
     # 2. Create data loaders
     loader_args = dict(num_workers=8,
@@ -61,7 +63,7 @@ def test_models(dataset_name, load_checkpoint=True):
     })  # metrics calculator
 
     net.eval()
-    logging.info('SET model mode to test!')
+    print('SET model mode to test!')
 
     with torch.no_grad():
         for batch_img1, batch_img2, labels, name in tqdm(test_loader):
@@ -97,5 +99,5 @@ if __name__ == '__main__':
         # TODO:需要修改成自己的数据集路径
         test_models(dataset_name=ph.dataset_name, load_checkpoint=False)
     except KeyboardInterrupt:
-        logging.info('Error')
+        print('Error')
         sys.exit(0)
